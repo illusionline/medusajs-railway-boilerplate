@@ -1,0 +1,8 @@
+packages:
+  - storefront
+  - backend
+
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - unrs-resolver
