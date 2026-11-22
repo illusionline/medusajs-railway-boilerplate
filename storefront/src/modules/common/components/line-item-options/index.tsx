@@ -12,13 +12,17 @@ const LineItemOptions = ({
   "data-testid": dataTestid,
   "data-value": dataValue,
 }: LineItemOptionsProps) => {
+  if (!variant?.title || variant.title.toLowerCase() === "default variant") {
+    return null
+  }
+
   return (
     <Text
       data-testid={dataTestid}
       data-value={dataValue}
-      className="inline-block txt-medium text-ui-fg-subtle w-full overflow-hidden text-ellipsis"
+      className="inline-block text-xs tracking-[0.08em] uppercase text-[#0A0A0A]/60 w-full overflow-hidden text-ellipsis"
     >
-      Variant: {variant?.title}
+      Size: {variant.title}
     </Text>
   )
 }

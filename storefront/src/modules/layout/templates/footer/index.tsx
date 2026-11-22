@@ -1,155 +1,135 @@
-import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
-import { Text, clx } from "@medusajs/ui"
-
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
 
 export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
+  const collections = await listCollections({
+    fields: "id, handle, title",
   })
-  const productCategories = await listCategories()
+    .then((res) => res.collections)
+    .catch(() => [])
 
   return (
-    <footer className="border-t border-ui-border-base w-full">
+    <footer className="bg-[#0A0A0A] text-[#FAF9F6] border-t border-[#1A1A1A] w-full">
       <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
+        <div className="grid grid-cols-1 small:grid-cols-[1.4fr_2fr] gap-y-14 gap-x-16 py-20 small:py-28">
+          {/* Brand Column */}
+          <div className="flex flex-col gap-y-5 max-w-sm">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+              className="text-base small:text-lg uppercase tracking-[0.36em] text-[#FAF9F6] hover:opacity-80 transition-opacity w-fit"
             >
-              Medusa Store
+              ILLUSIONLINE
             </LocalizedClientLink>
+            <p className="text-xs leading-relaxed text-[#FAF9F6]/60 font-light">
+              Architectural eveningwear conceived in sculptural silhouettes.
+              Crafted in limited ready-to-wear editions and bespoke
+              made-to-measure tailoring.
+            </p>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return
-                    }
 
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null
-
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
+          {/* Navigation Columns */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 small:gap-x-12">
+            {/* Atelier */}
+            <div className="flex flex-col gap-y-4">
+              <span className="text-[10px] uppercase tracking-[0.26em] text-[#FAF9F6]/45">
+                Atelier
+              </span>
+              <ul className="flex flex-col gap-y-2.5 text-xs text-[#FAF9F6]/80">
                 <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                  <LocalizedClientLink
+                    href="/store"
+                    className="hover:text-[#FAF9F6] transition-colors"
                   >
-                    GitHub
-                  </a>
+                    Shop All
+                  </LocalizedClientLink>
                 </li>
                 <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                  <LocalizedClientLink
+                    href="/store?sortBy=created_at"
+                    className="hover:text-[#FAF9F6] transition-colors"
                   >
-                    Documentation
-                  </a>
+                    New Arrivals
+                  </LocalizedClientLink>
+                </li>
+                {collections?.slice(0, 4).map((c) => (
+                  <li key={c.id}>
+                    <LocalizedClientLink
+                      href={`/collections/${c.handle}`}
+                      className="hover:text-[#FAF9F6] transition-colors"
+                    >
+                      {c.title}
+                    </LocalizedClientLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Client Care */}
+            <div className="flex flex-col gap-y-4">
+              <span className="text-[10px] uppercase tracking-[0.26em] text-[#FAF9F6]/45">
+                Client Care
+              </span>
+              <ul className="flex flex-col gap-y-2.5 text-xs text-[#FAF9F6]/80">
+                <li>
+                  <LocalizedClientLink
+                    href="/client-care#shipping"
+                    className="hover:text-[#FAF9F6] transition-colors"
+                  >
+                    Worldwide DHL Express Shipping
+                  </LocalizedClientLink>
                 </li>
                 <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
+                  <LocalizedClientLink
+                    href="/client-care#made-to-measure"
+                    className="hover:text-[#FAF9F6] transition-colors"
                   >
-                    Source code
-                  </a>
+                    Made-to-Measure Guide
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink
+                    href="/client-care#concierge"
+                    className="hover:text-[#FAF9F6] transition-colors"
+                  >
+                    Client Concierge
+                  </LocalizedClientLink>
+                </li>
+              </ul>
+            </div>
+
+            {/* Private Account */}
+            <div className="flex flex-col gap-y-4">
+              <span className="text-[10px] uppercase tracking-[0.26em] text-[#FAF9F6]/45">
+                Client Portal
+              </span>
+              <ul className="flex flex-col gap-y-2.5 text-xs text-[#FAF9F6]/80">
+                <li>
+                  <LocalizedClientLink
+                    href="/account"
+                    className="hover:text-[#FAF9F6] transition-colors"
+                  >
+                    Account
+                  </LocalizedClientLink>
+                </li>
+                <li>
+                  <LocalizedClientLink
+                    href="/cart"
+                    className="hover:text-[#FAF9F6] transition-colors"
+                  >
+                    Shopping Bag
+                  </LocalizedClientLink>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
-          <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
-          </Text>
-          <MedusaCTA />
+
+        {/* Bottom Hairline Bar */}
+        <div className="border-t border-[#1A1A1A] py-8 flex flex-col xsmall:flex-row items-start xsmall:items-center justify-between gap-4 text-[11px] tracking-[0.14em] uppercase text-[#FAF9F6]/45">
+          <span>
+            © {new Date().getFullYear()} ILLUSIONLINE. All rights reserved.
+          </span>
+          <span>Ready-to-Wear &amp; Bespoke Eveningwear</span>
         </div>
       </div>
     </footer>

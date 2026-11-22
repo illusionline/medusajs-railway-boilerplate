@@ -1,6 +1,7 @@
 import { HttpTypes } from "@medusajs/types"
 import { Table, Text } from "@medusajs/ui"
 
+import LineItemMeasurements from "@modules/common/components/line-item-measurements"
 import LineItemOptions from "@modules/common/components/line-item-options"
 import LineItemPrice from "@modules/common/components/line-item-price"
 import LineItemUnitPrice from "@modules/common/components/line-item-unit-price"
@@ -13,27 +14,34 @@ type ItemProps = {
 
 const Item = ({ item, currencyCode }: ItemProps) => {
   return (
-    <Table.Row className="w-full" data-testid="product-row">
-      <Table.Cell className="!pl-0 p-4 w-24">
+    <Table.Row
+      className="w-full bg-transparent border-b border-[#0A0A0A]/10"
+      data-testid="product-row"
+    >
+      <Table.Cell className="!pl-0 py-4 pr-4 w-24 align-top">
         <div className="flex w-16">
-          <Thumbnail thumbnail={item.thumbnail} size="square" />
+          <Thumbnail thumbnail={item.thumbnail} size="portrait" />
         </div>
       </Table.Cell>
 
-      <Table.Cell className="text-left">
+      <Table.Cell className="text-left py-4 align-top">
         <Text
-          className="txt-medium-plus text-ui-fg-base"
+          className="font-display text-lg text-[#0A0A0A]"
           data-testid="product-name"
         >
           {item.product_title}
         </Text>
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
+        <LineItemMeasurements
+          metadata={item.metadata as Record<string, unknown> | undefined}
+          compact
+        />
       </Table.Cell>
 
-      <Table.Cell className="!pr-0">
-        <span className="!pr-0 flex flex-col items-end h-full justify-center">
-          <span className="flex gap-x-1 ">
-            <Text className="text-ui-fg-muted">
+      <Table.Cell className="!pr-0 py-4 align-top">
+        <span className="!pr-0 flex flex-col items-end h-full justify-start">
+          <span className="flex gap-x-1">
+            <Text className="text-[#0A0A0A]/60">
               <span data-testid="product-quantity">{item.quantity}</span>x{" "}
             </Text>
             <LineItemUnitPrice

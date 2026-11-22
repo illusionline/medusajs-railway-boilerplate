@@ -1,9 +1,5 @@
 "use client"
 
-import Back from "@modules/common/icons/back"
-import FastDelivery from "@modules/common/icons/fast-delivery"
-import Refresh from "@modules/common/icons/refresh"
-
 import Accordion from "./accordion"
 import { HttpTypes } from "@medusajs/types"
 
@@ -14,17 +10,17 @@ type ProductTabsProps = {
 const ProductTabs = ({ product }: ProductTabsProps) => {
   const tabs = [
     {
-      label: "Product Information",
+      label: "Composition & Atelier Details",
       component: <ProductInfoTab product={product} />,
     },
     {
-      label: "Shipping & Returns",
+      label: "Worldwide DHL Express & Bespoke Care",
       component: <ShippingInfoTab />,
     },
   ]
 
   return (
-    <div className="w-full">
+    <div className="w-full border-t border-[#0A0A0A]/10 pt-2">
       <Accordion type="multiple">
         {tabs.map((tab, i) => (
           <Accordion.Item
@@ -43,35 +39,29 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
 
 const ProductInfoTab = ({ product }: ProductTabsProps) => {
   return (
-    <div className="text-small-regular py-8">
-      <div className="grid grid-cols-2 gap-x-8">
-        <div className="flex flex-col gap-y-4">
-          <div>
-            <span className="font-semibold">Material</span>
-            <p>{product.material ? product.material : "-"}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Country of origin</span>
-            <p>{product.origin_country ? product.origin_country : "-"}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Type</span>
-            <p>{product.type ? product.type.value : "-"}</p>
-          </div>
+    <div className="text-xs text-[#0A0A0A]/75 py-5 space-y-4 leading-relaxed">
+      <p>
+        Hand-finished in the ILLUSIONLINE atelier with architectural seam
+        construction and luxury eveningwear lining.
+      </p>
+      <div className="grid grid-cols-2 gap-4 pt-1">
+        <div>
+          <span className="block text-[10px] uppercase tracking-[0.2em] text-[#0A0A0A]/45 mb-1">
+            Material
+          </span>
+          <p className="text-[#0A0A0A]">
+            {product.material ? product.material : "Couture Silk-Crepe Blend"}
+          </p>
         </div>
-        <div className="flex flex-col gap-y-4">
-          <div>
-            <span className="font-semibold">Weight</span>
-            <p>{product.weight ? `${product.weight} g` : "-"}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Dimensions</span>
-            <p>
-              {product.length && product.width && product.height
-                ? `${product.length}L x ${product.width}W x ${product.height}H`
-                : "-"}
-            </p>
-          </div>
+        <div>
+          <span className="block text-[10px] uppercase tracking-[0.2em] text-[#0A0A0A]/45 mb-1">
+            Origin
+          </span>
+          <p className="text-[#0A0A0A]">
+            {product.origin_country
+              ? product.origin_country.toUpperCase()
+              : "ILLUSIONLINE Atelier"}
+          </p>
         </div>
       </div>
     </div>
@@ -80,40 +70,21 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
 
 const ShippingInfoTab = () => {
   return (
-    <div className="text-small-regular py-8">
-      <div className="grid grid-cols-1 gap-y-8">
-        <div className="flex items-start gap-x-2">
-          <FastDelivery />
-          <div>
-            <span className="font-semibold">Fast delivery</span>
-            <p className="max-w-sm">
-              Your package will arrive in 3-5 business days at your pick up
-              location or in the comfort of your home.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-start gap-x-2">
-          <Refresh />
-          <div>
-            <span className="font-semibold">Simple exchanges</span>
-            <p className="max-w-sm">
-              Is the fit not quite right? No worries - we&apos;ll exchange your
-              product for a new one.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-start gap-x-2">
-          <Back />
-          <div>
-            <span className="font-semibold">Easy returns</span>
-            <p className="max-w-sm">
-              Just return your product and we&apos;ll refund your money. No
-              questions asked – we&apos;ll do our best to make sure your return
-              is hassle-free.
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="text-xs text-[#0A0A0A]/75 py-5 space-y-3 leading-relaxed">
+      <p>
+        <strong className="font-medium text-[#0A0A0A]">
+          Worldwide DHL Express:
+        </strong>{" "}
+        Insured door-to-door delivery in 1–2 business days within the UAE &amp;
+        GCC, and 2–5 business days internationally.
+      </p>
+      <p>
+        <strong className="font-medium text-[#0A0A0A]">
+          Made-to-Measure Commissions:
+        </strong>{" "}
+        Individually drafted to your submitted measurements within 10–14
+        business days, with complimentary minor tailoring adjustments included.
+      </p>
     </div>
   )
 }

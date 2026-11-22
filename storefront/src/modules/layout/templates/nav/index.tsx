@@ -10,35 +10,64 @@ import SideMenu from "@modules/layout/components/side-menu"
 
 export default async function Nav() {
   const [regions, locales, currentLocale] = await Promise.all([
-    listRegions().then((regions: StoreRegion[]) => regions),
-    listLocales(),
-    getLocale(),
+    listRegions()
+      .then((regions: StoreRegion[]) => regions)
+      .catch(() => null),
+    listLocales().catch(() => null),
+    getLocale().catch(() => null),
   ])
 
   return (
-    <div className="sticky top-0 inset-x-0 z-50 group">
-      <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
-        <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
-          <div className="flex-1 basis-0 h-full flex items-center">
-            <div className="h-full">
-              <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
+    <div className="sticky top-0 inset-x-0 z-50">
+      <header className="relative h-16 small:h-20 mx-auto bg-[#FAF9F6]/85 backdrop-blur-xl border-b border-[#1A1A1A]/15 transition-colors duration-300">
+        <nav
+          aria-label="Primary Navigation"
+          className="content-container flex items-center justify-between w-full h-full"
+        >
+          {/* Left Navigation */}
+          <div className="flex-1 basis-0 h-full flex items-center gap-x-8">
+            <div className="h-full flex items-center small:hidden">
+              <SideMenu
+                regions={regions}
+                locales={locales}
+                currentLocale={currentLocale}
+              />
+            </div>
+
+            <div className="hidden small:flex items-center gap-x-8 h-full">
+              <LocalizedClientLink
+                href="/store"
+                className="text-[11px] uppercase tracking-[0.22em] text-[#0A0A0A]/75 hover:text-[#0A0A0A] transition-colors duration-200"
+                data-testid="nav-shop-all-link"
+              >
+                Shop All
+              </LocalizedClientLink>
+              <LocalizedClientLink
+                href="/store?sortBy=created_at"
+                className="text-[11px] uppercase tracking-[0.22em] text-[#0A0A0A]/75 hover:text-[#0A0A0A] transition-colors duration-200"
+                data-testid="nav-new-arrivals-link"
+              >
+                New Arrivals
+              </LocalizedClientLink>
             </div>
           </div>
 
-          <div className="flex items-center h-full">
+          {/* Centered Wordmark */}
+          <div className="flex items-center justify-center h-full">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
+              className="text-sm small:text-[17px] font-normal uppercase tracking-[0.36em] text-[#0A0A0A] hover:opacity-75 transition-opacity duration-200 pl-[0.36em]"
               data-testid="nav-store-link"
             >
-              Medusa Store
+              ILLUSIONLINE
             </LocalizedClientLink>
           </div>
 
-          <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
-            <div className="hidden small:flex items-center gap-x-6 h-full">
+          {/* Right Navigation */}
+          <div className="flex items-center gap-x-8 h-full flex-1 basis-0 justify-end">
+            <div className="hidden small:flex items-center gap-x-8 h-full">
               <LocalizedClientLink
-                className="hover:text-ui-fg-base"
+                className="text-[11px] uppercase tracking-[0.22em] text-[#0A0A0A]/75 hover:text-[#0A0A0A] transition-colors duration-200"
                 href="/account"
                 data-testid="nav-account-link"
               >
@@ -48,11 +77,11 @@ export default async function Nav() {
             <Suspense
               fallback={
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base flex gap-2"
+                  className="text-[11px] uppercase tracking-[0.22em] text-[#0A0A0A]/75 hover:text-[#0A0A0A] transition-colors duration-200"
                   href="/cart"
                   data-testid="nav-cart-link"
                 >
-                  Cart (0)
+                  Bag (0)
                 </LocalizedClientLink>
               }
             >

@@ -20,21 +20,38 @@ const StoreTemplate = ({
 
   return (
     <div
-      className="flex flex-col small:flex-row small:items-start py-6 content-container"
+      className="py-12 small:py-20 content-container bg-[#FAF9F6]"
       data-testid="category-container"
     >
-      <RefinementList sortBy={sort} />
-      <div className="w-full">
-        <div className="mb-8 text-2xl-semi">
-          <h1 data-testid="store-page-title">All products</h1>
+      <div className="mb-12 pb-6 border-b border-[#0A0A0A]/10 flex flex-col small:flex-row small:items-end justify-between gap-6">
+        <div>
+          <span className="block text-[10px] uppercase tracking-[0.3em] text-[#0A0A0A]/45 mb-2">
+            ILLUSIONLINE ATELIER
+          </span>
+          <h1
+            className="font-display text-4xl small:text-5xl font-light tracking-wide text-[#0A0A0A]"
+            data-testid="store-page-title"
+          >
+            Eveningwear Collection
+          </h1>
         </div>
-        <Suspense fallback={<SkeletonProductGrid />}>
-          <PaginatedProducts
-            sortBy={sort}
-            page={pageNumber}
-            countryCode={countryCode}
-          />
-        </Suspense>
+        <p className="text-xs text-[#0A0A0A]/60 max-w-sm leading-relaxed">
+          Every gown is available in standard atelier sizing and bespoke
+          made-to-measure tailoring.
+        </p>
+      </div>
+
+      <div className="flex flex-col small:flex-row small:items-start gap-x-10">
+        <RefinementList sortBy={sort} />
+        <div className="w-full">
+          <Suspense fallback={<SkeletonProductGrid />}>
+            <PaginatedProducts
+              sortBy={sort}
+              page={pageNumber}
+              countryCode={countryCode}
+            />
+          </Suspense>
+        </div>
       </div>
     </div>
   )

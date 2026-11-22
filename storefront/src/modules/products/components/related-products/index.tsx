@@ -18,49 +18,47 @@ export default async function RelatedProducts({
     return null
   }
 
-  // edit this function to define your related products logic
-  const queryParams: HttpTypes.StoreProductListParams = {}
+  const queryParams: HttpTypes.StoreProductListParams = {
+    limit: 5,
+    is_giftcard: false,
+  }
   if (region?.id) {
     queryParams.region_id = region.id
   }
   if (product.collection_id) {
     queryParams.collection_id = [product.collection_id]
   }
-  if (product.tags) {
-    queryParams.tag_id = product.tags
-      .map((t) => t.id)
-      .filter(Boolean) as string[]
-  }
-  queryParams.is_giftcard = false
 
   const products = await listProducts({
     queryParams,
     countryCode,
-  }).then(({ response }) => {
-    return response.products.filter(
-      (responseProduct) => responseProduct.id !== product.id
-    )
   })
+    .then(({ response }) =>
+      response.products
+        .filter((responseProduct) => responseProduct.id !== product.id)
+        .slice(0, 4)
+    )
+    .catch(() => [])
 
   if (!products.length) {
     return null
   }
 
   return (
-    <div className="product-page-constraint">
-      <div className="flex flex-col items-center text-center mb-16">
-        <span className="text-base-regular text-gray-600 mb-6">
-          Related products
+    <div>
+      <div className="flex flex-col items-start mb-12 pb-5 border-b border-[#0A0A0A]/10">
+        <span className="text-[10px] uppercase tracking-[0.28em] text-[#0A0A0A]/45 mb-2">
+          Curated Selection
         </span>
-        <p className="text-2xl-regular text-ui-fg-base max-w-lg">
-          You might also want to check out these products.
-        </p>
+        <h2 className="font-display text-3xl small:text-4xl font-light tracking-wide text-[#0A0A0A]">
+          Complementary Silhouettes
+        </h2>
       </div>
 
-      <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8">
-        {products.map((product) => (
-          <li key={product.id}>
-            <Product region={region} product={product} />
+      <ul className="grid grid-cols-2 small:grid-cols-4 gap-x-6 gap-y-12">
+        {products.map((related) => (
+          <li key={related.id}>
+            <Product region={region} product={related} />
           </li>
         ))}
       </ul>

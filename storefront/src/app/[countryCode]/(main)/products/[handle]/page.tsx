@@ -4,6 +4,7 @@ import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
+
 export const dynamic = "force-dynamic"
 
 type Props = {
@@ -56,18 +57,32 @@ export async function generateStaticParams() {
 function getImagesForVariant(
   product: HttpTypes.StoreProduct,
   selectedVariantId?: string
-) {
+): HttpTypes.StoreProductImage[] {
+  const baseImages =
+    product.images && product.images.length > 0
+      ? product.images
+      : product.thumbnail
+      ? ([
+          {
+            id: "thumbnail",
+            url: product.thumbnail,
+            rank: 0,
+          },
+        ] as HttpTypes.StoreProductImage[])
+      : []
+
   if (!selectedVariantId || !product.variants) {
-    return product.images
+    return baseImages
   }
 
-  const variant = product.variants!.find((v) => v.id === selectedVariantId)
-  if (!variant || !variant.images.length) {
-    return product.images
+  const variant = product.variants.find((v) => v.id === selectedVariantId)
+  if (!variant || !variant.images?.length) {
+    return baseImages
   }
 
   const imageIdsMap = new Map(variant.images.map((i) => [i.id, true]))
-  return product.images!.filter((i) => imageIdsMap.has(i.id))
+  const filtered = baseImages.filter((i) => imageIdsMap.has(i.id))
+  return filtered.length > 0 ? filtered : baseImages
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -89,11 +104,15 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.title} | Medusa Store`,
-    description: `${product.title}`,
+    title: product.title,
+    description:
+      product.description ||
+      `${product.title} — ILLUSIONLINE Architectural Eveningwear.`,
     openGraph: {
-      title: `${product.title} | Medusa Store`,
-      description: `${product.title}`,
+      title: `${product.title} | ILLUSIONLINE`,
+      description:
+        product.description ||
+        `${product.title} — ILLUSIONLINE Architectural Eveningwear.`,
       images: product.thumbnail ? [product.thumbnail] : [],
     },
   }
@@ -115,11 +134,11 @@ export default async function ProductPage(props: Props) {
     queryParams: { handle: params.handle },
   }).then(({ response }) => response.products[0])
 
-  const images = getImagesForVariant(pricedProduct, selectedVariantId)
-
   if (!pricedProduct) {
     notFound()
   }
+
+  const images = getImagesForVariant(pricedProduct, selectedVariantId)
 
   return (
     <ProductTemplate

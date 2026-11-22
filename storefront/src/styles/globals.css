@@ -2,6 +2,43 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@layer base {
+  html {
+    background-color: #faf9f6;
+    color: #0a0a0a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #faf9f6;
+    color: #0a0a0a;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #0a0a0a;
+    color: #faf9f6;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+}
+
 @layer utilities {
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
@@ -35,9 +72,9 @@
   select:-webkit-autofill,
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus {
-    border: 1px solid #212121;
-    -webkit-text-fill-color: #212121;
-    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+    border: 1px solid #1a1a1a;
+    -webkit-text-fill-color: #0a0a0a;
+    -webkit-box-shadow: 0 0 0px 1000px #faf9f6 inset;
     transition: background-color 5000s ease-in-out 0s;
   }
 
@@ -51,11 +88,15 @@
 
 @layer components {
   .content-container {
-    @apply max-w-[1440px] w-full mx-auto px-6;
+    @apply max-w-[1440px] w-full mx-auto px-6 small:px-10;
+  }
+
+  .luxury-wordmark {
+    @apply font-sans uppercase tracking-[0.34em] font-light text-[#0A0A0A];
   }
 
   .contrast-btn {
-    @apply px-4 py-2 border border-black rounded-full hover:bg-black hover:text-white transition-colors duration-200 ease-in;
+    @apply px-6 py-3 border border-[#0A0A0A] text-xs uppercase tracking-[0.2em] hover:bg-[#0A0A0A] hover:text-[#FAF9F6] transition-colors duration-300 ease-out;
   }
 
   .text-xsmall-regular {

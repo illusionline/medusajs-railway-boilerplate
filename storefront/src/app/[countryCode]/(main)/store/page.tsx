@@ -3,9 +3,12 @@ import { Metadata } from "next"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import StoreTemplate from "@modules/store/templates"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
-  title: "Store",
-  description: "Explore all of our products.",
+  title: "Eveningwear Collection",
+  description:
+    "Explore ILLUSIONLINE architectural eveningwear — Ready-to-Wear & Bespoke Made-to-Measure.",
 }
 
 type Params = {
@@ -19,8 +22,8 @@ type Params = {
 }
 
 export default async function StorePage(props: Params) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
+  const params = await props.params
+  const searchParams = await props.searchParams
   const { sortBy, page } = searchParams
 
   return (

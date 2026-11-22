@@ -20,7 +20,14 @@ module.exports = {
         visibility: "visibility",
         padding: "padding-top padding-right padding-bottom padding-left",
       },
+      transitionTimingFunction: {
+        luxury: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
       colors: {
+        obsidian: "#0A0A0A",
+        alabaster: "#FAF9F6",
+        hairline: "#1A1A1A",
+        stone: "#F2EFE9",
         grey: {
           0: "#FFFFFF",
           5: "#F9FAFB",
@@ -60,6 +67,8 @@ module.exports = {
       },
       fontFamily: {
         sans: [
+          "var(--font-sans)",
+          "Plus Jakarta Sans",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
@@ -68,6 +77,13 @@ module.exports = {
           "Helvetica Neue",
           "Ubuntu",
           "sans-serif",
+        ],
+        display: [
+          "var(--font-display)",
+          "Cormorant Garamond",
+          "Georgia",
+          "Times New Roman",
+          "serif",
         ],
       },
       keyframes: {

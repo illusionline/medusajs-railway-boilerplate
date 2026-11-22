@@ -20,12 +20,12 @@ const Register = ({ setCurrentView }: Props) => {
       className="max-w-sm flex flex-col items-center"
       data-testid="register-page"
     >
-      <h1 className="text-large-semi uppercase mb-6">
-        Become a Medusa Store Member
+      <h1 className="font-display text-3xl font-light tracking-wide text-[#0A0A0A] mb-3 text-center">
+        Create Client Profile
       </h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Create your Medusa Store Member profile, and get access to an enhanced
-        shopping experience.
+      <p className="text-center text-xs leading-relaxed text-[#0A0A0A]/65 mb-6">
+        Register with ILLUSIONLINE to manage bespoke commissions, saved delivery
+        addresses, and private orders.
       </p>
       <form className="w-full flex flex-col" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">
@@ -68,32 +68,25 @@ const Register = ({ setCurrentView }: Props) => {
           />
         </div>
         <ErrorMessage error={message} data-testid="register-error" />
-        <span className="text-center text-ui-fg-base text-small-regular mt-6">
-          By creating an account, you agree to Medusa Store&apos;s{" "}
+        <span className="text-center text-[#0A0A0A]/60 text-xs mt-6 leading-relaxed">
+          By creating an account, you agree to ILLUSIONLINE&apos;s{" "}
           <LocalizedClientLink
-            href="/content/privacy-policy"
-            className="underline"
+            href="/client-care#concierge"
+            className="underline text-[#0A0A0A]"
           >
-            Privacy Policy
-          </LocalizedClientLink>{" "}
-          and{" "}
-          <LocalizedClientLink
-            href="/content/terms-of-use"
-            className="underline"
-          >
-            Terms of Use
+            Client Terms &amp; Privacy
           </LocalizedClientLink>
           .
         </span>
         <SubmitButton className="w-full mt-6" data-testid="register-button">
-          Join
+          Create Account
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
-        Already a member?{" "}
+      <span className="text-center text-[#0A0A0A]/70 text-xs mt-6">
+        Already registered?{" "}
         <button
           onClick={() => setCurrentView(LOGIN_VIEW.SIGN_IN)}
-          className="underline"
+          className="underline text-[#0A0A0A]"
         >
           Sign in
         </button>

@@ -7,6 +7,8 @@ import { StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 
+export const dynamic = "force-dynamic"
+
 type Props = {
   params: Promise<{ category: string[]; countryCode: string }>
   searchParams: Promise<{
@@ -16,30 +18,34 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  const product_categories = await listCategories()
+  try {
+    const product_categories = await listCategories()
 
-  if (!product_categories) {
+    if (!product_categories) {
+      return []
+    }
+
+    const countryCodes = await listRegions().then((regions: StoreRegion[]) =>
+      regions?.map((r) => r.countries?.map((c) => c.iso_2)).flat()
+    )
+
+    const categoryHandles = product_categories.map(
+      (category: any) => category.handle
+    )
+
+    const staticParams = countryCodes
+      ?.map((countryCode: string | undefined) =>
+        categoryHandles.map((handle: any) => ({
+          countryCode,
+          category: [handle],
+        }))
+      )
+      .flat()
+
+    return staticParams || []
+  } catch {
     return []
   }
-
-  const countryCodes = await listRegions().then((regions: StoreRegion[]) =>
-    regions?.map((r) => r.countries?.map((c) => c.iso_2)).flat()
-  )
-
-  const categoryHandles = product_categories.map(
-    (category: any) => category.handle
-  )
-
-  const staticParams = countryCodes
-    ?.map((countryCode: string | undefined) =>
-      categoryHandles.map((handle: any) => ({
-        countryCode,
-        category: [handle],
-      }))
-    )
-    .flat()
-
-  return staticParams
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -47,18 +53,20 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   try {
     const productCategory = await getCategoryByHandle(params.category)
 
-    const title = productCategory.name + " | Medusa Store"
+    const title = productCategory.name
 
-    const description = productCategory.description ?? `${title} category.`
+    const description =
+      productCategory.description ??
+      `${productCategory.name} — ILLUSIONLINE Architectural Eveningwear.`
 
     return {
-      title: `${title} | Medusa Store`,
+      title,
       description,
       alternates: {
         canonical: `${params.category.join("/")}`,
       },
     }
-  } catch (error) {
+  } catch {
     notFound()
   }
 }

@@ -7,19 +7,23 @@ import Divider from "@modules/common/components/divider"
 
 const CheckoutSummary = ({ cart }: { cart: any }) => {
   return (
-    <div className="sticky top-0 flex flex-col-reverse small:flex-col gap-y-8 py-8 small:py-0 ">
-      <div className="w-full bg-white flex flex-col">
+    <div className="sticky top-24 flex flex-col-reverse small:flex-col gap-y-8 py-8 small:py-0">
+      <div className="w-full bg-[#FAF9F6] border border-[#0A0A0A]/10 p-6 small:p-8 flex flex-col">
         <Divider className="my-6 small:hidden" />
         <Heading
           level="h2"
-          className="flex flex-row text-3xl-regular items-baseline"
+          className="font-display text-2xl small:text-3xl font-light tracking-wide text-[#0A0A0A]"
         >
-          In your Cart
+          Your Selection
         </Heading>
+        <p className="text-[11px] uppercase tracking-[0.18em] text-[#0A0A0A]/55 mt-1">
+          Worldwide DHL Express · Atelier Insured
+        </p>
+        <Divider className="my-6" />
+        <ItemsPreviewTemplate cart={cart} />
         <Divider className="my-6" />
         <CartTotals totals={cart} />
-        <ItemsPreviewTemplate cart={cart} />
-        <div className="my-6">
+        <div className="mt-6">
           <DiscountCode cart={cart} />
         </div>
       </div>
