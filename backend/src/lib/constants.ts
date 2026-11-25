@@ -15,6 +15,14 @@ export const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL
 export const STRIPE_API_KEY = process.env.STRIPE_API_KEY
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET
 
+// Network International (N-Genius Online) Configuration
+export const NGENIUS_API_KEY = process.env.NGENIUS_API_KEY
+export const NGENIUS_OUTLET_REF = process.env.NGENIUS_OUTLET_REF
+export const NGENIUS_ENV = process.env.NGENIUS_ENV || "sandbox"
+export const NGENIUS_WEBHOOK_SECRET = process.env.NGENIUS_WEBHOOK_SECRET
+export const STOREFRONT_URL =
+  process.env.STOREFRONT_URL || "https://beta.illusionline.com"
+
 export const SHOULD_DISABLE_ADMIN = process.env.SHOULD_DISABLE_ADMIN === "true"
 export const WORKER_MODE = (process.env.MEDUSA_WORKER_MODE as "shared" | "worker" | "server") || "shared"
 

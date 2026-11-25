@@ -6,10 +6,15 @@ import {
   COOKIE_SECRET,
   DATABASE_URL,
   JWT_SECRET,
+  NGENIUS_API_KEY,
+  NGENIUS_ENV,
+  NGENIUS_OUTLET_REF,
+  NGENIUS_WEBHOOK_SECRET,
   REDIS_URL,
   RESEND_API_KEY,
   RESEND_FROM_EMAIL,
   SHOULD_DISABLE_ADMIN,
+  STOREFRONT_URL,
   STORE_CORS,
   STRIPE_API_KEY,
   STRIPE_WEBHOOK_SECRET,
@@ -124,14 +129,29 @@ module.exports = defineConfig({
         }
       ]
       : []),
-    // Payment module (Stripe)
-    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET
-      ? [
-        {
-          key: Modules.PAYMENT,
-          resolve: '@medusajs/payment',
-          options: {
-            providers: [
+    // Payment module (Network International N-Genius + optional Stripe)
+    {
+      key: Modules.PAYMENT,
+      resolve: '@medusajs/medusa/payment',
+      options: {
+        providers: [
+          {
+            resolve: './src/modules/ngenius',
+            id: 'ngenius',
+            options: {
+              apiKey: NGENIUS_API_KEY || process.env.NGENIUS_API_KEY,
+              outletRef: NGENIUS_OUTLET_REF || process.env.NGENIUS_OUTLET_REF,
+              env: NGENIUS_ENV || process.env.NGENIUS_ENV || 'sandbox',
+              storefrontUrl:
+                process.env.STOREFRONT_URL ||
+                STOREFRONT_URL ||
+                'https://beta.illusionline.com',
+              webhookSecret:
+                NGENIUS_WEBHOOK_SECRET || process.env.NGENIUS_WEBHOOK_SECRET,
+            },
+          },
+          ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET
+            ? [
               {
                 resolve: '@medusajs/payment-stripe',
                 id: 'stripe',
@@ -139,13 +159,13 @@ module.exports = defineConfig({
                   apiKey: STRIPE_API_KEY,
                   webhookSecret: STRIPE_WEBHOOK_SECRET,
                   capture: true,
-                  automatic_payment_methods: true
-                }
-              }
+                  automatic_payment_methods: true,
+                },
+              },
             ]
-          }
-        }
-      ]
-      : [])
+            : []),
+        ],
+      },
+    },
   ]
 });

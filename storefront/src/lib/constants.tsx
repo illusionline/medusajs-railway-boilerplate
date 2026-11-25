@@ -5,11 +5,17 @@ import Ideal from "@modules/common/icons/ideal"
 import Bancontact from "@modules/common/icons/bancontact"
 import PayPal from "@modules/common/icons/paypal"
 
-/* Map of payment provider_id to their title and icon. Add in any payment providers you want to use. */
+/* Map of payment provider_id to their title, optional subtitle, and icon. */
 export const paymentInfoMap: Record<
   string,
-  { title: string; icon: React.JSX.Element }
+  { title: string; subtitle?: string; icon: React.JSX.Element }
 > = {
+  pp_ngenius_ngenius: {
+    title: "Card / Apple Pay",
+    subtitle:
+      "Secure AED checkout via Network International (Visa, Mastercard, Apple Pay)",
+    icon: <CreditCard />,
+  },
   pp_stripe_stripe: {
     title: "Credit card",
     icon: <CreditCard />,
@@ -34,7 +40,10 @@ export const paymentInfoMap: Record<
     title: "Manual Payment",
     icon: <CreditCard />,
   },
-  // Add more payment providers here
+}
+
+export const isNgenius = (providerId?: string) => {
+  return Boolean(providerId?.startsWith("pp_ngenius"))
 }
 
 // This only checks if it is native stripe or medusa payments for card payments, it ignores the other stripe-based providers

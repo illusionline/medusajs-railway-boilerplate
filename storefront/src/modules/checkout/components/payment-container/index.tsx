@@ -15,7 +15,10 @@ type PaymentContainerProps = {
   paymentProviderId: string
   selectedPaymentOptionId: string | null
   disabled?: boolean
-  paymentInfoMap: Record<string, { title: string; icon: JSX.Element }>
+  paymentInfoMap: Record<
+    string,
+    { title: string; subtitle?: string; icon: JSX.Element }
+  >
   children?: React.ReactNode
 }
 
@@ -27,6 +30,8 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
   children,
 }) => {
   const isDevelopment = process.env.NODE_ENV === "development"
+  const isSelected = selectedPaymentOptionId === paymentProviderId
+  const info = paymentInfoMap[paymentProviderId]
 
   return (
     <RadioGroupOption
@@ -34,25 +39,33 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
       value={paymentProviderId}
       disabled={disabled}
       className={clx(
-        "flex flex-col gap-y-2 text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
-        {
-          "border-ui-border-interactive":
-            selectedPaymentOptionId === paymentProviderId,
-        }
+        "flex flex-col gap-y-2 text-small-regular cursor-pointer py-4 border px-6 mb-2.5 transition-colors duration-200",
+        isSelected
+          ? "border-[#0A0A0A] bg-[#F2EFE9]/50"
+          : "border-[#0A0A0A]/15 bg-transparent hover:border-[#0A0A0A]/40"
       )}
     >
-      <div className="flex items-center justify-between ">
-        <div className="flex items-center gap-x-4">
-          <Radio checked={selectedPaymentOptionId === paymentProviderId} />
-          <Text className="text-base-regular">
-            {paymentInfoMap[paymentProviderId]?.title || paymentProviderId}
-          </Text>
+      <div className="flex items-start justify-between gap-x-4">
+        <div className="flex items-start gap-x-4">
+          <div className="mt-0.5">
+            <Radio checked={isSelected} />
+          </div>
+          <div className="flex flex-col">
+            <Text className="text-sm font-medium text-[#0A0A0A]">
+              {info?.title || paymentProviderId}
+            </Text>
+            {info?.subtitle && (
+              <span className="text-xs text-[#0A0A0A]/60 mt-0.5 leading-relaxed">
+                {info.subtitle}
+              </span>
+            )}
+          </div>
           {isManual(paymentProviderId) && isDevelopment && (
             <PaymentTest className="hidden small:block" />
           )}
         </div>
-        <span className="justify-self-end text-ui-fg-base">
-          {paymentInfoMap[paymentProviderId]?.icon}
+        <span className="justify-self-end text-[#0A0A0A] shrink-0 mt-0.5">
+          {info?.icon}
         </span>
       </div>
       {isManual(paymentProviderId) && isDevelopment && (
@@ -84,15 +97,15 @@ export const StripeCardContainer = ({
     return {
       style: {
         base: {
-          fontFamily: "Inter, sans-serif",
-          color: "#424270",
+          fontFamily: "Plus Jakarta Sans, Inter, sans-serif",
+          color: "#0A0A0A",
           "::placeholder": {
-            color: "rgb(107 114 128)",
+            color: "rgba(10, 10, 10, 0.45)",
           },
         },
       },
       classes: {
-        base: "pt-3 pb-1 block w-full h-11 px-4 mt-0 bg-ui-bg-field border rounded-md appearance-none focus:outline-none focus:ring-0 focus:shadow-borders-interactive-with-active border-ui-border-base hover:bg-ui-bg-field-hover transition-all duration-300 ease-in-out",
+        base: "pt-3 pb-1 block w-full h-11 px-4 mt-0 bg-[#FAF9F6] border border-[#0A0A0A]/25 appearance-none focus:outline-none focus:ring-0 focus:border-[#0A0A0A] transition-colors duration-200",
       },
     }
   }, [])
@@ -107,8 +120,8 @@ export const StripeCardContainer = ({
       {selectedPaymentOptionId === paymentProviderId &&
         (stripeReady ? (
           <div className="my-4 transition-all duration-150 ease-in-out">
-            <Text className="txt-medium-plus text-ui-fg-base mb-1">
-              Enter your card details:
+            <Text className="text-xs uppercase tracking-[0.18em] text-[#0A0A0A]/70 mb-2">
+              Enter Card Details
             </Text>
             <CardElement
               options={useOptions as StripeCardElementOptions}

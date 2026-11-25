@@ -1,11 +1,16 @@
 "use client"
 
-import { isManual, isStripeLike } from "@lib/constants"
+import { isManual, isNgenius, isStripeLike } from "@lib/constants"
 import { useDisplayCurrency } from "@lib/context/display-currency-context"
-import { placeOrder, recordCheckoutPolicyConfirmation } from "@lib/data/cart"
+import {
+  placeOrder,
+  prepareNgeniusCheckoutRedirect,
+  recordCheckoutPolicyConfirmation,
+} from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 import { useElements, useStripe } from "@stripe/react-stripe-js"
+import { useParams } from "next/navigation"
 import React, { useState } from "react"
 import ErrorMessage from "../error-message"
 
@@ -30,9 +35,21 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     (cart.shipping_methods?.length ?? 0) < 1 ||
     !policyAccepted
 
-  const paymentSession = cart.payment_collection?.payment_sessions?.[0]
+  const paymentSession =
+    cart.payment_collection?.payment_sessions?.find(
+      (s) => s.status === "pending"
+    ) || cart.payment_collection?.payment_sessions?.[0]
 
   switch (true) {
+    case isNgenius(paymentSession?.provider_id):
+      return (
+        <NgeniusPaymentButton
+          notReady={notReady}
+          cart={cart}
+          bespokeConfirmed={bespokeConfirmed}
+          data-testid={dataTestId}
+        />
+      )
     case isStripeLike(paymentSession?.provider_id):
       return (
         <StripePaymentButton
@@ -62,6 +79,73 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         </button>
       )
   }
+}
+
+const NgeniusPaymentButton = ({
+  notReady,
+  cart,
+  bespokeConfirmed,
+  "data-testid": dataTestId,
+}: {
+  notReady: boolean
+  cart: HttpTypes.StoreCart
+  bespokeConfirmed: boolean
+  "data-testid"?: string
+}) => {
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { displayCurrency, appliedRate, formatAED } = useDisplayCurrency()
+  const params = useParams()
+  const countryCode = (params?.countryCode as string) || "ae"
+
+  const handleRedirectToNgenius = async () => {
+    setSubmitting(true)
+    setErrorMessage(null)
+
+    try {
+      const { paymentUrl } = await prepareNgeniusCheckoutRedirect({
+        countryCode,
+        bespokeConfirmed,
+        displayCurrencyViewed: displayCurrency,
+        appliedFxRate: appliedRate,
+      })
+
+      window.location.assign(paymentUrl)
+    } catch (err: any) {
+      setErrorMessage(
+        err?.message ||
+          "Unable to connect to Network International Hosted Payment Page. Please try again."
+      )
+      setSubmitting(false)
+    }
+  }
+
+  const isButtonDisabled = notReady || submitting
+
+  return (
+    <>
+      <button
+        type="button"
+        disabled={isButtonDisabled}
+        onClick={handleRedirectToNgenius}
+        data-testid={dataTestId || "submit-order-button"}
+        className={clx(
+          "w-full h-14 text-xs uppercase tracking-[0.24em] font-medium transition-colors duration-300 flex items-center justify-center",
+          isButtonDisabled
+            ? "bg-[#0A0A0A]/20 text-[#0A0A0A]/50 cursor-not-allowed"
+            : "bg-[#0A0A0A] text-[#FAF9F6] hover:bg-[#1A1A1A]"
+        )}
+      >
+        {submitting
+          ? "Redirecting to Secure Payment..."
+          : `Proceed to Card / Apple Pay · ${formatAED(cart?.total ?? 0)}`}
+      </button>
+      <ErrorMessage
+        error={errorMessage}
+        data-testid="ngenius-payment-error-message"
+      />
+    </>
+  )
 }
 
 const StripePaymentButton = ({
@@ -116,7 +200,6 @@ const StripePaymentButton = ({
     }
 
     try {
-      // Persist timestamped confirmation & FX context into Medusa Cart metadata right before order submission
       await recordCheckoutPolicyConfirmation({
         bespokeConfirmed,
         displayCurrencyViewed: displayCurrency,
@@ -227,7 +310,6 @@ const ManualTestPaymentButton = ({
     setErrorMessage(null)
 
     try {
-      // Persist timestamped confirmation & FX context into Medusa Cart metadata right before order submission
       await recordCheckoutPolicyConfirmation({
         bespokeConfirmed,
         displayCurrencyViewed: displayCurrency,
@@ -236,7 +318,6 @@ const ManualTestPaymentButton = ({
 
       await placeOrder()
     } catch (err: any) {
-      // Next.js redirect() throws NEXT_REDIRECT internally; rethrow it so navigation succeeds
       if (
         err?.digest?.startsWith("NEXT_REDIRECT") ||
         err?.message === "NEXT_REDIRECT"

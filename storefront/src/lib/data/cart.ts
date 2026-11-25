@@ -12,6 +12,7 @@ import {
   getCartId,
   removeCartId,
   setCartId,
+  setNgeniusCheckoutContext,
 } from "./cookies"
 import { getRegion } from "./regions"
 import { getLocale } from "@lib/data/locale-actions"
@@ -140,6 +141,93 @@ export async function recordCheckoutPolicyConfirmation({
       settled_in: "AED",
     },
   })
+}
+
+export async function prepareNgeniusCheckoutRedirect({
+  countryCode,
+  bespokeConfirmed,
+  displayCurrencyViewed,
+  appliedFxRate,
+}: {
+  countryCode: string
+  bespokeConfirmed: boolean
+  displayCurrencyViewed: string
+  appliedFxRate: number
+}): Promise<{ paymentUrl: string; ngeniusOrderRef?: string }> {
+  await recordCheckoutPolicyConfirmation({
+    bespokeConfirmed,
+    displayCurrencyViewed,
+    appliedFxRate,
+  })
+
+  const cart = await retrieveCart(
+    undefined,
+    "id,total,email,*billing_address,*shipping_address,+metadata,*payment_collection,*payment_collection.payment_sessions"
+  )
+
+  if (!cart) {
+    throw new Error("No active shopping bag found for N-Genius checkout.")
+  }
+
+  const expectedFils = Math.round(Number(cart.total ?? 0) * 100)
+  const existingNgeniusSession =
+    cart.payment_collection?.payment_sessions?.find(
+      (s) =>
+        s.provider_id === "pp_ngenius_ngenius" && s.status === "pending"
+    )
+
+  let paymentUrl = existingNgeniusSession?.data?.paymentUrl as
+    | string
+    | undefined
+  let ngeniusOrderRef = existingNgeniusSession?.data?.ngeniusOrderRef as
+    | string
+    | undefined
+  const sessionState = String(
+    existingNgeniusSession?.data?.ngeniusState || "STARTED"
+  ).toUpperCase()
+  const sessionFils = Number(existingNgeniusSession?.data?.amountInFils ?? -1)
+
+  // Initialize or refresh N-Genius HPP session if missing, amount changed, or prior attempt was already consumed
+  if (
+    !paymentUrl ||
+    sessionFils !== expectedFils ||
+    (sessionState !== "STARTED" && sessionState !== "AWAIT_3DS")
+  ) {
+    const resp = await initiatePaymentSession(cart, {
+      provider_id: "pp_ngenius_ngenius",
+      data: {
+        email: cart.email,
+        billing_address: cart.billing_address,
+      },
+    })
+
+    const refreshedSession = resp.payment_collection?.payment_sessions?.find(
+      (s) =>
+        s.provider_id === "pp_ngenius_ngenius" && s.status === "pending"
+    )
+
+    paymentUrl = refreshedSession?.data?.paymentUrl as string | undefined
+    ngeniusOrderRef = refreshedSession?.data?.ngeniusOrderRef as
+      | string
+      | undefined
+  }
+
+  if (!paymentUrl) {
+    throw new Error(
+      "Unable to initialize Network International Hosted Payment Page URL."
+    )
+  }
+
+  await setNgeniusCheckoutContext({
+    cartId: cart.id,
+    countryCode: countryCode || "ae",
+    ngeniusOrderRef,
+  })
+
+  return {
+    paymentUrl,
+    ngeniusOrderRef,
+  }
 }
 
 export async function addToCart({
