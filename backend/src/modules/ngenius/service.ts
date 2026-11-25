@@ -64,6 +64,47 @@ type RuntimeConfig = {
   webhookSecret?: string
 }
 
+/**
+ * N-Genius requires merchantOrderReference to match /^[a-zA-Z0-9\-]{1,37}$/.
+ * Medusa v2 IDs (e.g. payses_01J..., pay_col_01J...) contain underscores.
+ */
+export function toNgeniusMerchantRef(rawId: string): string {
+  if (!rawId || typeof rawId !== "string") {
+    return ""
+  }
+
+  const sanitized = rawId
+    .trim()
+    .replace(/[^a-zA-Z0-9-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 37)
+    .replace(/-+$/g, "")
+
+  return /^[a-zA-Z0-9-]{1,37}$/.test(sanitized) ? sanitized : ""
+}
+
+/**
+ * Restores sanitized N-Genius merchantOrderReference values (payses-..., pay-col-...)
+ * back to original underscore Medusa session IDs when needed during webhook correlation.
+ */
+export function fromNgeniusMerchantRef(ref?: string | null): string | undefined {
+  if (!ref || typeof ref !== "string") {
+    return undefined
+  }
+  const trimmed = ref.trim()
+  if (!trimmed) {
+    return undefined
+  }
+  if (trimmed.startsWith("payses-")) {
+    return `payses_${trimmed.slice("payses-".length)}`
+  }
+  if (trimmed.startsWith("pay-col-")) {
+    return `pay_col_${trimmed.slice("pay-col-".length)}`
+  }
+  return trimmed
+}
+
 class NgeniusPaymentProviderService extends AbstractPaymentProvider<NgeniusOptions> {
   static identifier = "ngenius"
 
@@ -255,6 +296,20 @@ class NgeniusPaymentProviderService extends AbstractPaymentProvider<NgeniusOptio
     return (text ? JSON.parse(text) : {}) as T
   }
 
+  public static toNgeniusMerchantRef(rawId: string): string {
+    return toNgeniusMerchantRef(rawId)
+  }
+
+  public static fromNgeniusMerchantRef(ref?: string | null): string | undefined {
+    return fromNgeniusMerchantRef(ref)
+  }
+
+  private cleanNonEmptyString(val: unknown): string | undefined {
+    if (typeof val !== "string") return undefined
+    const trimmed = val.trim()
+    return trimmed.length > 0 ? trimmed : undefined
+  }
+
   private buildBillingAddress(
     data?: Record<string, unknown>,
     context?: InitiatePaymentInput["context"]
@@ -267,28 +322,59 @@ class NgeniusPaymentProviderService extends AbstractPaymentProvider<NgeniusOptio
       return undefined
     }
 
-    const billing: Record<string, string> = {}
-    const firstName = String(
-      rawAddr.first_name || rawAddr.firstName || context?.customer?.first_name || ""
-    ).trim()
-    const lastName = String(
-      rawAddr.last_name || rawAddr.lastName || context?.customer?.last_name || ""
-    ).trim()
-    const address1 = String(rawAddr.address_1 || rawAddr.address1 || "").trim()
-    const city = String(rawAddr.city || "").trim()
-    const countryCode = String(
-      rawAddr.country_code || rawAddr.countryCode || ""
-    )
-      .trim()
-      .toUpperCase()
+    const firstName =
+      this.cleanNonEmptyString(rawAddr.first_name) ||
+      this.cleanNonEmptyString(rawAddr.firstName) ||
+      this.cleanNonEmptyString(context?.customer?.first_name)
 
-    if (firstName) billing.firstName = firstName
-    if (lastName) billing.lastName = lastName
-    if (address1) billing.address1 = address1
-    if (city) billing.city = city
-    if (countryCode) billing.countryCode = countryCode
+    const lastName =
+      this.cleanNonEmptyString(rawAddr.last_name) ||
+      this.cleanNonEmptyString(rawAddr.lastName) ||
+      this.cleanNonEmptyString(context?.customer?.last_name)
 
-    return Object.keys(billing).length > 0 ? billing : undefined
+    const address1 =
+      this.cleanNonEmptyString(rawAddr.address_1) ||
+      this.cleanNonEmptyString(rawAddr.address1)
+
+    const address2 =
+      this.cleanNonEmptyString(rawAddr.address_2) ||
+      this.cleanNonEmptyString(rawAddr.address2)
+
+    const city = this.cleanNonEmptyString(rawAddr.city)
+
+    const state =
+      this.cleanNonEmptyString(rawAddr.province) ||
+      this.cleanNonEmptyString(rawAddr.state)
+
+    const postalCode =
+      this.cleanNonEmptyString(rawAddr.postal_code) ||
+      this.cleanNonEmptyString(rawAddr.postalCode)
+
+    const rawCountry =
+      this.cleanNonEmptyString(rawAddr.country_code) ||
+      this.cleanNonEmptyString(rawAddr.countryCode)
+    const countryCode = rawCountry ? rawCountry.toUpperCase() : undefined
+    const validCountryCode =
+      countryCode && /^[A-Z]{2,3}$/.test(countryCode) ? countryCode : undefined
+
+    // Only include billingAddress when required core fields are present and valid
+    if (!firstName || !lastName || !address1 || !city || !validCountryCode) {
+      return undefined
+    }
+
+    const billing: Record<string, string> = {
+      firstName,
+      lastName,
+      address1,
+      city,
+      countryCode: validCountryCode,
+    }
+
+    if (address2) billing.address2 = address2
+    if (state) billing.state = state
+    if (postalCode) billing.postalCode = postalCode
+
+    return billing
   }
 
   private async createNgeniusOrder({
@@ -302,12 +388,19 @@ class NgeniusPaymentProviderService extends AbstractPaymentProvider<NgeniusOptio
     data?: Record<string, unknown>
     context?: InitiatePaymentInput["context"]
   }): Promise<NgeniusOrderResponse> {
-    const sessionId =
-      typeof data?.session_id === "string" ? data.session_id : undefined
+    const sessionId = this.cleanNonEmptyString(data?.session_id)
+    const merchantOrderReference = sessionId
+      ? NgeniusPaymentProviderService.toNgeniusMerchantRef(sessionId)
+      : ""
 
-    const emailAddress = String(
-      data?.email || context?.customer?.email || ""
-    ).trim()
+    const rawEmail =
+      this.cleanNonEmptyString(data?.email) ||
+      this.cleanNonEmptyString(context?.customer?.email)
+    const emailAddress =
+      rawEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawEmail)
+        ? rawEmail
+        : undefined
+
     const billingAddress = this.buildBillingAddress(data, context)
 
     const redirectUrl = `${cfg.storefrontUrl}/api/ngenius/callback`
@@ -324,7 +417,7 @@ class NgeniusPaymentProviderService extends AbstractPaymentProvider<NgeniusOptio
         cancelUrl,
         skipConfirmationPage: true,
       },
-      ...(sessionId ? { merchantOrderReference: sessionId } : {}),
+      ...(merchantOrderReference ? { merchantOrderReference } : {}),
       ...(sessionId ? { merchantDefinedData: { session_id: sessionId } } : {}),
       ...(emailAddress ? { emailAddress } : {}),
       ...(billingAddress ? { billingAddress } : {}),
@@ -833,8 +926,14 @@ class NgeniusPaymentProviderService extends AbstractPaymentProvider<NgeniusOptio
         return { action: PaymentActions.NOT_SUPPORTED }
       }
 
+      const definedSessionId = this.cleanNonEmptyString(
+        order.merchantDefinedData?.session_id
+      )
       const sessionId =
-        order.merchantDefinedData?.session_id || order.merchantOrderReference
+        definedSessionId ||
+        NgeniusPaymentProviderService.fromNgeniusMerchantRef(
+          order.merchantOrderReference
+        )
 
       if (!sessionId) {
         return { action: PaymentActions.NOT_SUPPORTED }
