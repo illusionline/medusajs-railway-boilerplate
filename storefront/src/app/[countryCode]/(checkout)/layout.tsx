@@ -1,5 +1,6 @@
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ChevronDown from "@modules/common/icons/chevron-down"
+import CurrencySwitcher from "@modules/layout/components/currency-switcher"
 
 export default function CheckoutLayout({
   children,
@@ -29,9 +30,10 @@ export default function CheckoutLayout({
             >
               ILLUSIONLINE
             </LocalizedClientLink>
-            <div className="flex-1 basis-0 flex justify-end">
+            <div className="flex-1 basis-0 flex items-center justify-end gap-x-5 h-full">
+              <CurrencySwitcher variant="header" />
               <span className="hidden small:inline text-[10px] uppercase tracking-[0.2em] text-[#0A0A0A]/45">
-                Secure Checkout
+                AED Checkout
               </span>
             </div>
           </nav>
@@ -41,7 +43,8 @@ export default function CheckoutLayout({
         </div>
       </div>
       <div className="py-8 border-t border-[#0A0A0A]/10 w-full flex items-center justify-center text-[11px] uppercase tracking-[0.18em] text-[#0A0A0A]/45">
-        © {new Date().getFullYear()} ILLUSIONLINE · Worldwide DHL Express
+        © {new Date().getFullYear()} ILLUSIONLINE · All Orders Settled in AED ·
+        Worldwide DHL Express
       </div>
     </div>
   )

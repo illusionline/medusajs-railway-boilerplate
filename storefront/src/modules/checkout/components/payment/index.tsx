@@ -9,6 +9,7 @@ import ErrorMessage from "@modules/checkout/components/error-message"
 import PaymentContainer, {
   StripeCardContainer,
 } from "@modules/checkout/components/payment-container"
+import SettlementAndDutiesBanner from "@modules/checkout/components/settlement-and-duties-banner"
 import Divider from "@modules/common/components/divider"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
@@ -105,12 +106,12 @@ const Payment = ({
   }, [isOpen])
 
   return (
-    <div className="bg-white">
+    <div className="bg-transparent">
       <div className="flex flex-row items-center justify-between mb-6">
         <Heading
           level="h2"
           className={clx(
-            "flex flex-row text-3xl-regular gap-x-2 items-baseline",
+            "flex flex-row font-display text-3xl font-light tracking-wide text-[#0A0A0A] gap-x-2 items-baseline",
             {
               "opacity-50 pointer-events-none select-none":
                 !isOpen && !paymentReady,
@@ -124,7 +125,7 @@ const Payment = ({
           <Text>
             <button
               onClick={handleEdit}
-              className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
+              className="text-xs uppercase tracking-[0.18em] text-[#0A0A0A]/70 hover:text-[#0A0A0A] underline underline-offset-4"
               data-testid="edit-payment-button"
             >
               Edit
@@ -134,6 +135,8 @@ const Payment = ({
       </div>
       <div>
         <div className={isOpen ? "block" : "hidden"}>
+          <SettlementAndDutiesBanner cart={cart} />
+
           {!paidByGiftcard && availablePaymentMethods?.length && (
             <>
               <RadioGroup
@@ -185,7 +188,7 @@ const Payment = ({
 
           <Button
             size="large"
-            className="mt-6"
+            className="mt-6 bg-[#0A0A0A] text-[#FAF9F6] hover:bg-[#1A1A1A] rounded-none h-12 px-8 text-xs uppercase tracking-[0.22em]"
             onClick={handleSubmit}
             isLoading={isLoading}
             disabled={
@@ -195,8 +198,8 @@ const Payment = ({
             data-testid="submit-payment-button"
           >
             {!activeSession && isStripeLike(selectedPaymentMethod)
-              ? " Enter card details"
-              : "Continue to review"}
+              ? "Enter Card Details"
+              : "Continue to Review"}
           </Button>
         </div>
 
@@ -231,7 +234,7 @@ const Payment = ({
                   <Text>
                     {isStripeLike(selectedPaymentMethod) && cardBrand
                       ? cardBrand
-                      : "Another step will appear"}
+                      : "AED Settlement Ready"}
                   </Text>
                 </div>
               </div>

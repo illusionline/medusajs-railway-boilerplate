@@ -1,4 +1,6 @@
-import { convertToLocale } from "@lib/util/money"
+"use client"
+
+import { useDisplayCurrency } from "@lib/context/display-currency-context"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 
@@ -6,21 +8,27 @@ type LineItemUnitPriceProps = {
   item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem
   style?: "default" | "tight"
   currencyCode: string
+  forceAED?: boolean
 }
 
 const LineItemUnitPrice = ({
   item,
   style = "default",
-  currencyCode,
+  forceAED = false,
 }: LineItemUnitPriceProps) => {
+  const { formatPrice, formatAED } = useDisplayCurrency()
   const total = item.total ?? 0
   const originalTotal = item.original_total ?? 0
+  const qty = Math.max(1, item.quantity || 1)
   const hasReducedPrice = total < originalTotal && originalTotal > 0
 
   const percentage_diff =
     originalTotal > 0
       ? Math.round(((originalTotal - total) / originalTotal) * 100)
       : 0
+
+  const formatAmt = (amt: number) =>
+    forceAED ? formatAED(amt) : formatPrice(amt, { approxPrefix: true })
 
   return (
     <div className="flex flex-col text-[#0A0A0A]/65 justify-center h-full">
@@ -34,10 +42,7 @@ const LineItemUnitPrice = ({
               className="line-through text-xs"
               data-testid="product-unit-original-price"
             >
-              {convertToLocale({
-                amount: originalTotal / item.quantity,
-                currency_code: currencyCode,
-              })}
+              {formatAmt(originalTotal / qty)}
             </span>
           </p>
           {style === "default" && (
@@ -51,10 +56,7 @@ const LineItemUnitPrice = ({
         })}
         data-testid="product-unit-price"
       >
-        {convertToLocale({
-          amount: total / item.quantity,
-          currency_code: currencyCode,
-        })}
+        {formatAmt(total / qty)}
       </span>
     </div>
   )

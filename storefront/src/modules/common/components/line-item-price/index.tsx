@@ -1,5 +1,7 @@
+"use client"
+
+import { useDisplayCurrency } from "@lib/context/display-currency-context"
 import { getPercentageDiff } from "@lib/util/get-percentage-diff"
-import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 
@@ -7,17 +9,22 @@ type LineItemPriceProps = {
   item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem
   style?: "default" | "tight"
   currencyCode: string
+  forceAED?: boolean
 }
 
 const LineItemPrice = ({
   item,
   style = "default",
-  currencyCode,
+  forceAED = false,
 }: LineItemPriceProps) => {
+  const { displayCurrency, formatPrice, formatAED } = useDisplayCurrency()
   const { total, original_total } = item
   const originalPrice = original_total ?? 0
   const currentPrice = total ?? 0
   const hasReducedPrice = currentPrice < originalPrice
+
+  const formatAmt = (amt: number) =>
+    forceAED ? formatAED(amt) : formatPrice(amt, { approxPrefix: true })
 
   return (
     <div className="flex flex-col gap-x-2 text-[#0A0A0A]/80 items-end">
@@ -32,10 +39,7 @@ const LineItemPrice = ({
                 className="line-through text-[#0A0A0A]/45 text-xs"
                 data-testid="product-original-price"
               >
-                {convertToLocale({
-                  amount: originalPrice,
-                  currency_code: currencyCode,
-                })}
+                {formatAmt(originalPrice)}
               </span>
             </p>
             {style === "default" && (
@@ -46,16 +50,18 @@ const LineItemPrice = ({
           </>
         )}
         <span
-          className={clx("text-xs tracking-[0.06em] text-[#0A0A0A]", {
+          className={clx("text-xs tracking-[0.06em] text-[#0A0A0A] block", {
             "font-medium": hasReducedPrice,
           })}
           data-testid="product-price"
         >
-          {convertToLocale({
-            amount: currentPrice,
-            currency_code: currencyCode,
-          })}
+          {formatAmt(currentPrice)}
         </span>
+        {!forceAED && displayCurrency !== "AED" && (
+          <span className="block text-[10px] tracking-[0.06em] text-[#0A0A0A]/45">
+            {formatAED(currentPrice)}
+          </span>
+        )}
       </div>
     </div>
   )

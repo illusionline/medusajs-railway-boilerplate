@@ -1,9 +1,14 @@
+import {
+  isSupportedDisplayCurrency,
+  mapCountryToDisplayCurrency,
+} from "@lib/util/format-display-price"
 import { HttpTypes } from "@medusajs/types"
 import { NextRequest, NextResponse } from "next/server"
 
 const BACKEND_URL = process.env.MEDUSA_BACKEND_URL
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
+const DISPLAY_CURRENCY_COOKIE = "display_currency"
 
 const regionMapCache = {
   regionMap: new Map<string, HttpTypes.StoreRegion>(),
@@ -23,7 +28,6 @@ async function getRegionMap(cacheId: string) {
     !regionMap.keys().next().value ||
     regionMapUpdated < Date.now() - 3600 * 1000
   ) {
-    // Fetch regions from Medusa. We can't use the JS client here because middleware is running on Edge and the client needs a Node environment.
     const { regions } = await fetch(`${BACKEND_URL}/store/regions`, {
       headers: {
         "x-publishable-api-key": PUBLISHABLE_API_KEY!,
@@ -49,7 +53,6 @@ async function getRegionMap(cacheId: string) {
       )
     }
 
-    // Create a map of country codes to regions.
     regions.forEach((region: HttpTypes.StoreRegion) => {
       region.countries?.forEach((c) => {
         regionMapCache.regionMap.set(c.iso_2 ?? "", region)
@@ -62,11 +65,6 @@ async function getRegionMap(cacheId: string) {
   return regionMapCache.regionMap
 }
 
-/**
- * Fetches regions from Medusa and sets the region cookie.
- * @param request
- * @param response
- */
 async function getCountryCode(
   request: NextRequest,
   regionMap: Map<string, HttpTypes.StoreRegion | number>
@@ -100,9 +98,30 @@ async function getCountryCode(
   }
 }
 
-/**
- * Middleware to handle region selection and onboarding status.
- */
+function attachGeoDisplayCurrencyCookie(
+  request: NextRequest,
+  response: NextResponse
+) {
+  const existing = request.cookies.get(DISPLAY_CURRENCY_COOKIE)?.value
+  if (isSupportedDisplayCurrency(existing)) {
+    return
+  }
+
+  const geoCountry =
+    request.headers.get("x-vercel-ip-country") ||
+    request.headers.get("cf-ipcountry") ||
+    request.headers.get("x-country-code")
+
+  if (geoCountry) {
+    const detected = mapCountryToDisplayCurrency(geoCountry)
+    response.cookies.set(DISPLAY_CURRENCY_COOKIE, detected, {
+      maxAge: 60 * 60 * 24 * 365,
+      path: "/",
+      sameSite: "lax",
+    })
+  }
+}
+
 export async function middleware(request: NextRequest) {
   let redirectUrl = request.nextUrl.href
 
@@ -119,21 +138,21 @@ export async function middleware(request: NextRequest) {
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
 
-  // if one of the country codes is in the url and the cache id is set, return next
   if (urlHasCountryCode && cacheIdCookie) {
-    return NextResponse.next()
+    const nextRes = NextResponse.next()
+    attachGeoDisplayCurrencyCookie(request, nextRes)
+    return nextRes
   }
 
-  // if one of the country codes is in the url and the cache id is not set, set the cache id and redirect
   if (urlHasCountryCode && !cacheIdCookie) {
     response.cookies.set("_medusa_cache_id", cacheId, {
       maxAge: 60 * 60 * 24,
     })
+    attachGeoDisplayCurrencyCookie(request, response)
 
     return response
   }
 
-  // check if the url is a static asset
   if (request.nextUrl.pathname.includes(".")) {
     return NextResponse.next()
   }
@@ -143,12 +162,11 @@ export async function middleware(request: NextRequest) {
 
   const queryString = request.nextUrl.search ? request.nextUrl.search : ""
 
-  // If no country code is set, we redirect to the relevant region.
   if (!urlHasCountryCode && countryCode) {
     redirectUrl = `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`
     response = NextResponse.redirect(`${redirectUrl}`, 307)
+    attachGeoDisplayCurrencyCookie(request, response)
   } else if (!urlHasCountryCode && !countryCode) {
-    // Handle case where no valid country code exists (empty regions)
     return new NextResponse(
       "No valid regions configured. Please set up regions with countries in your Medusa Admin.",
       { status: 500 }

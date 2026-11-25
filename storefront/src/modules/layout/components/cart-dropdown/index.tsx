@@ -1,6 +1,6 @@
 "use client"
 
-import { convertToLocale } from "@lib/util/money"
+import { useDisplayCurrency } from "@lib/context/display-currency-context"
 import { HttpTypes } from "@medusajs/types"
 import DeleteButton from "@modules/common/components/delete-button"
 import LineItemMeasurements from "@modules/common/components/line-item-measurements"
@@ -30,6 +30,7 @@ const CartDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const { displayCurrency, formatPrice, formatAED } = useDisplayCurrency()
 
   const totalItems =
     cartState?.items?.reduce((acc, item) => {
@@ -237,29 +238,41 @@ const CartDropdown = ({
                           ))}
                       </div>
 
-                      {/* Drawer Footer */}
+                      {/* Drawer Footer: Dual Display Currency + Exact AED Settlement */}
                       <div className="p-6 border-t border-[#0A0A0A]/10 bg-[#FAF9F6] space-y-4">
-                        <div className="flex items-baseline justify-between">
-                          <span className="text-xs uppercase tracking-[0.2em] text-[#0A0A0A]/70">
-                            Subtotal{" "}
-                            <span className="normal-case tracking-normal text-[#0A0A0A]/45">
-                              (excl. duties)
+                        <div className="space-y-1.5">
+                          <div className="flex items-baseline justify-between">
+                            <span className="text-xs uppercase tracking-[0.2em] text-[#0A0A0A]/70">
+                              Subtotal{" "}
+                              <span className="normal-case tracking-normal text-[#0A0A0A]/45">
+                                (excl. duties)
+                              </span>
                             </span>
-                          </span>
-                          <span
-                            className="font-display text-2xl text-[#0A0A0A]"
-                            data-testid="cart-subtotal"
-                            data-value={subtotal}
-                          >
-                            {convertToLocale({
-                              amount: subtotal,
-                              currency_code: cartState.currency_code,
-                            })}
-                          </span>
+                            <span
+                              className="font-display text-2xl text-[#0A0A0A]"
+                              data-testid="cart-subtotal"
+                              data-value={subtotal}
+                            >
+                              {formatPrice(subtotal, { approxPrefix: true })}
+                            </span>
+                          </div>
+
+                          {displayCurrency !== "AED" && (
+                            <div className="flex items-center justify-between text-[11px] text-[#0A0A0A]/65 border-t border-[#0A0A0A]/10 pt-2">
+                              <span className="uppercase tracking-[0.16em]">
+                                Exact AED Settlement
+                              </span>
+                              <span className="font-medium text-[#0A0A0A]">
+                                {formatAED(subtotal)}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
                         <p className="text-[11px] text-[#0A0A0A]/55 leading-relaxed">
-                          Worldwide DHL Express shipping calculated at checkout.
+                          {displayCurrency !== "AED"
+                            ? `Displayed ${displayCurrency} values are approximate. Orders settle strictly in AED.`
+                            : "Worldwide DHL Express shipping calculated at checkout."}
                         </p>
 
                         <div className="grid grid-cols-1 gap-2.5 pt-1">

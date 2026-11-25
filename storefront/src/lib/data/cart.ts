@@ -24,7 +24,7 @@ import { getLocale } from "@lib/data/locale-actions"
 export async function retrieveCart(cartId?: string, fields?: string) {
   const id = cartId || (await getCartId())
   fields ??=
-    "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name"
+    "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name, +metadata"
 
   if (!id) {
     return null
@@ -112,6 +112,34 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
       return cart
     })
     .catch(medusaError)
+}
+
+export async function recordCheckoutPolicyConfirmation({
+  bespokeConfirmed,
+  displayCurrencyViewed,
+  appliedFxRate,
+}: {
+  bespokeConfirmed: boolean
+  displayCurrencyViewed: string
+  appliedFxRate: number
+}) {
+  const existingCart = await retrieveCart(undefined, "id,+metadata")
+
+  const existingMeta =
+    existingCart?.metadata && typeof existingCart.metadata === "object"
+      ? (existingCart.metadata as Record<string, unknown>)
+      : {}
+
+  return updateCart({
+    metadata: {
+      ...existingMeta,
+      terms_accepted_at: new Date().toISOString(),
+      bespoke_confirmed: bespokeConfirmed,
+      display_currency_viewed: displayCurrencyViewed,
+      applied_fx_rate: appliedFxRate,
+      settled_in: "AED",
+    },
+  })
 }
 
 export async function addToCart({

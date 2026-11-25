@@ -9,6 +9,7 @@ import { createPortal } from "react-dom"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CountrySelect from "../country-select"
+import CurrencySwitcher from "../currency-switcher"
 import LanguageSelect from "../language-select"
 import { HttpTypes } from "@medusajs/types"
 import { Locale } from "@lib/data/locales"
@@ -80,11 +81,12 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
 
                 <motion.aside
                   data-testid="nav-menu-popup"
+                  data-lenis-prevent
                   initial={{ x: "-100%" }}
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative z-10 w-full max-w-[380px] h-full bg-[#0A0A0A] text-[#FAF9F6] border-r border-[#1A1A1A] flex flex-col justify-between p-8"
+                  className="relative z-10 w-full max-w-[380px] h-full bg-[#0A0A0A] text-[#FAF9F6] border-r border-[#1A1A1A] flex flex-col justify-between p-8 overflow-y-auto"
                 >
                   <div className="flex items-center justify-between border-b border-[#1A1A1A] pb-5">
                     <span className="text-xs uppercase tracking-[0.32em] text-[#FAF9F6]">
@@ -118,6 +120,8 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                   </ul>
 
                   <div className="flex flex-col gap-y-5 border-t border-[#1A1A1A] pt-6 text-xs text-[#FAF9F6]/75">
+                    <CurrencySwitcher variant="drawer" />
+
                     {!!locales?.length && (
                       <div
                         className="flex justify-between items-center"

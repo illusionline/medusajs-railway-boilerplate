@@ -6,6 +6,7 @@ import { getLocale } from "@lib/data/locale-actions"
 import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
+import CurrencySwitcher from "@modules/layout/components/currency-switcher"
 import SideMenu from "@modules/layout/components/side-menu"
 
 export default async function Nav() {
@@ -63,9 +64,13 @@ export default async function Nav() {
             </LocalizedClientLink>
           </div>
 
-          {/* Right Navigation */}
-          <div className="flex items-center gap-x-8 h-full flex-1 basis-0 justify-end">
-            <div className="hidden small:flex items-center gap-x-8 h-full">
+          {/* Right Navigation: Currency Switcher left of Account & Bag */}
+          <div className="flex items-center gap-x-5 small:gap-x-7 h-full flex-1 basis-0 justify-end">
+            <div className="hidden xsmall:flex items-center h-full">
+              <CurrencySwitcher variant="header" />
+            </div>
+
+            <div className="hidden small:flex items-center h-full">
               <LocalizedClientLink
                 className="text-[11px] uppercase tracking-[0.22em] text-[#0A0A0A]/75 hover:text-[#0A0A0A] transition-colors duration-200"
                 href="/account"
@@ -74,6 +79,7 @@ export default async function Nav() {
                 Account
               </LocalizedClientLink>
             </div>
+
             <Suspense
               fallback={
                 <LocalizedClientLink

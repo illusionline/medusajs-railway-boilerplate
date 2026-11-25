@@ -48,6 +48,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
               item={item}
               style="tight"
               currencyCode={currencyCode}
+              forceAED
             />
           </span>
 
@@ -55,6 +56,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
             item={item}
             style="tight"
             currencyCode={currencyCode}
+            forceAED
           />
         </span>
       </Table.Cell>

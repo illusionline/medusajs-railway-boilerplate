@@ -1,20 +1,25 @@
 "use client"
 
 import { isManual, isStripeLike } from "@lib/constants"
-import { placeOrder } from "@lib/data/cart"
+import { useDisplayCurrency } from "@lib/context/display-currency-context"
+import { placeOrder, recordCheckoutPolicyConfirmation } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
-import { Button } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
 import { useElements, useStripe } from "@stripe/react-stripe-js"
 import React, { useState } from "react"
 import ErrorMessage from "../error-message"
 
 type PaymentButtonProps = {
   cart: HttpTypes.StoreCart
+  policyAccepted?: boolean
+  bespokeConfirmed?: boolean
   "data-testid": string
 }
 
 const PaymentButton: React.FC<PaymentButtonProps> = ({
   cart,
+  policyAccepted = false,
+  bespokeConfirmed = false,
   "data-testid": dataTestId,
 }) => {
   const notReady =
@@ -22,7 +27,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     !cart.shipping_address ||
     !cart.billing_address ||
     !cart.email ||
-    (cart.shipping_methods?.length ?? 0) < 1
+    (cart.shipping_methods?.length ?? 0) < 1 ||
+    !policyAccepted
 
   const paymentSession = cart.payment_collection?.payment_sessions?.[0]
 
@@ -32,33 +38,56 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         <StripePaymentButton
           notReady={notReady}
           cart={cart}
+          bespokeConfirmed={bespokeConfirmed}
           data-testid={dataTestId}
         />
       )
     case isManual(paymentSession?.provider_id):
       return (
-        <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
+        <ManualTestPaymentButton
+          notReady={notReady}
+          cart={cart}
+          bespokeConfirmed={bespokeConfirmed}
+          data-testid={dataTestId}
+        />
       )
     default:
-      return <Button disabled>Select a payment method</Button>
+      return (
+        <button
+          type="button"
+          disabled
+          className="w-full h-14 bg-[#0A0A0A]/20 text-[#0A0A0A]/50 text-xs uppercase tracking-[0.24em] cursor-not-allowed"
+        >
+          Select a Payment Method
+        </button>
+      )
   }
 }
 
 const StripePaymentButton = ({
   cart,
   notReady,
+  bespokeConfirmed,
   "data-testid": dataTestId,
 }: {
   cart: HttpTypes.StoreCart
   notReady: boolean
+  bespokeConfirmed: boolean
   "data-testid"?: string
 }) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { displayCurrency, appliedRate, formatAED } = useDisplayCurrency()
 
   const onPaymentCompleted = async () => {
     await placeOrder()
       .catch((err) => {
+        if (
+          err?.digest?.startsWith("NEXT_REDIRECT") ||
+          err?.message === "NEXT_REDIRECT"
+        ) {
+          throw err
+        }
         setErrorMessage(err.message)
       })
       .finally(() => {
@@ -75,11 +104,28 @@ const StripePaymentButton = ({
   )
 
   const disabled = !stripe || !elements ? true : false
+  const isButtonDisabled = disabled || notReady || submitting
 
   const handlePayment = async () => {
     setSubmitting(true)
+    setErrorMessage(null)
 
     if (!stripe || !elements || !card || !cart) {
+      setSubmitting(false)
+      return
+    }
+
+    try {
+      // Persist timestamped confirmation & FX context into Medusa Cart metadata right before order submission
+      await recordCheckoutPolicyConfirmation({
+        bespokeConfirmed,
+        displayCurrencyViewed: displayCurrency,
+        appliedFxRate: appliedRate,
+      })
+    } catch (err: any) {
+      setErrorMessage(
+        err?.message || "Unable to record order confirmation. Please try again."
+      )
       setSubmitting(false)
       return
     }
@@ -115,9 +161,11 @@ const StripePaymentButton = ({
             (pi && pi.status === "succeeded")
           ) {
             onPaymentCompleted()
+            return
           }
 
           setErrorMessage(error.message || null)
+          setSubmitting(false)
           return
         }
 
@@ -128,21 +176,29 @@ const StripePaymentButton = ({
           return onPaymentCompleted()
         }
 
+        setSubmitting(false)
         return
       })
   }
 
   return (
     <>
-      <Button
-        disabled={disabled || notReady}
+      <button
+        type="button"
+        disabled={isButtonDisabled}
         onClick={handlePayment}
-        size="large"
-        isLoading={submitting}
         data-testid={dataTestId}
+        className={clx(
+          "w-full h-14 text-xs uppercase tracking-[0.24em] font-medium transition-colors duration-300 flex items-center justify-center",
+          isButtonDisabled
+            ? "bg-[#0A0A0A]/20 text-[#0A0A0A]/50 cursor-not-allowed"
+            : "bg-[#0A0A0A] text-[#FAF9F6] hover:bg-[#1A1A1A]"
+        )}
       >
-        Place order
-      </Button>
+        {submitting
+          ? "Processing Order..."
+          : `Place Order · ${formatAED(cart?.total ?? 0)}`}
+      </button>
       <ErrorMessage
         error={errorMessage}
         data-testid="stripe-payment-error-message"
@@ -151,37 +207,68 @@ const StripePaymentButton = ({
   )
 }
 
-const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
+const ManualTestPaymentButton = ({
+  notReady,
+  cart,
+  bespokeConfirmed,
+  "data-testid": dataTestId,
+}: {
+  notReady: boolean
+  cart: HttpTypes.StoreCart
+  bespokeConfirmed: boolean
+  "data-testid"?: string
+}) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { displayCurrency, appliedRate, formatAED } = useDisplayCurrency()
 
-  const onPaymentCompleted = async () => {
-    await placeOrder()
-      .catch((err) => {
-        setErrorMessage(err.message)
-      })
-      .finally(() => {
-        setSubmitting(false)
-      })
-  }
-
-  const handlePayment = () => {
+  const handlePayment = async () => {
     setSubmitting(true)
+    setErrorMessage(null)
 
-    onPaymentCompleted()
+    try {
+      // Persist timestamped confirmation & FX context into Medusa Cart metadata right before order submission
+      await recordCheckoutPolicyConfirmation({
+        bespokeConfirmed,
+        displayCurrencyViewed: displayCurrency,
+        appliedFxRate: appliedRate,
+      })
+
+      await placeOrder()
+    } catch (err: any) {
+      // Next.js redirect() throws NEXT_REDIRECT internally; rethrow it so navigation succeeds
+      if (
+        err?.digest?.startsWith("NEXT_REDIRECT") ||
+        err?.message === "NEXT_REDIRECT"
+      ) {
+        throw err
+      }
+      setErrorMessage(err?.message || "Unable to complete order.")
+    } finally {
+      setSubmitting(false)
+    }
   }
+
+  const isButtonDisabled = notReady || submitting
 
   return (
     <>
-      <Button
-        disabled={notReady}
-        isLoading={submitting}
+      <button
+        type="button"
+        disabled={isButtonDisabled}
         onClick={handlePayment}
-        size="large"
-        data-testid="submit-order-button"
+        data-testid={dataTestId || "submit-order-button"}
+        className={clx(
+          "w-full h-14 text-xs uppercase tracking-[0.24em] font-medium transition-colors duration-300 flex items-center justify-center",
+          isButtonDisabled
+            ? "bg-[#0A0A0A]/20 text-[#0A0A0A]/50 cursor-not-allowed"
+            : "bg-[#0A0A0A] text-[#FAF9F6] hover:bg-[#1A1A1A]"
+        )}
       >
-        Place order
-      </Button>
+        {submitting
+          ? "Processing Order..."
+          : `Place Order · ${formatAED(cart?.total ?? 0)}`}
+      </button>
       <ErrorMessage
         error={errorMessage}
         data-testid="manual-payment-error-message"

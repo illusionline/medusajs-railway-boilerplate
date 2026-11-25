@@ -1,10 +1,22 @@
+"use client"
+
+import { useDisplayCurrency } from "@lib/context/display-currency-context"
 import { clx } from "@medusajs/ui"
 import { VariantPrice } from "types/global"
 
 export default function PreviewPrice({ price }: { price: VariantPrice }) {
+  const { formatPrice } = useDisplayCurrency()
+
   if (!price) {
     return null
   }
+
+  const calculatedDisplay = formatPrice(price.calculated_price_number, {
+    approxPrefix: true,
+  })
+  const originalDisplay = formatPrice(price.original_price_number, {
+    approxPrefix: true,
+  })
 
   return (
     <>
@@ -13,7 +25,7 @@ export default function PreviewPrice({ price }: { price: VariantPrice }) {
           className="line-through text-[#0A0A0A]/40 text-xs"
           data-testid="original-price"
         >
-          {price.original_price}
+          {originalDisplay}
         </span>
       )}
       <span
@@ -22,7 +34,7 @@ export default function PreviewPrice({ price }: { price: VariantPrice }) {
         })}
         data-testid="price"
       >
-        {price.calculated_price}
+        {calculatedDisplay}
       </span>
     </>
   )

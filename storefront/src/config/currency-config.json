@@ -1,0 +1,142 @@
+{
+  "baseCurrency": "AED",
+  "supportedCurrencies": [
+    "AED",
+    "USD",
+    "EUR",
+    "GBP",
+    "AUD",
+    "CAD",
+    "SAR",
+    "KWD",
+    "QAR",
+    "IRT"
+  ],
+  "currencies": {
+    "AED": {
+      "code": "AED",
+      "label": "UAE Dirham",
+      "shortLabel": "AED",
+      "isIso4217": true
+    },
+    "USD": {
+      "code": "USD",
+      "label": "US Dollar",
+      "shortLabel": "USD",
+      "isIso4217": true
+    },
+    "EUR": {
+      "code": "EUR",
+      "label": "Euro",
+      "shortLabel": "EUR",
+      "isIso4217": true
+    },
+    "GBP": {
+      "code": "GBP",
+      "label": "British Pound",
+      "shortLabel": "GBP",
+      "isIso4217": true
+    },
+    "AUD": {
+      "code": "AUD",
+      "label": "Australian Dollar",
+      "shortLabel": "AUD",
+      "isIso4217": true
+    },
+    "CAD": {
+      "code": "CAD",
+      "label": "Canadian Dollar",
+      "shortLabel": "CAD",
+      "isIso4217": true
+    },
+    "SAR": {
+      "code": "SAR",
+      "label": "Saudi Riyal",
+      "shortLabel": "SAR",
+      "isIso4217": true
+    },
+    "KWD": {
+      "code": "KWD",
+      "label": "Kuwaiti Dinar",
+      "shortLabel": "KWD",
+      "isIso4217": true
+    },
+    "QAR": {
+      "code": "QAR",
+      "label": "Qatari Riyal",
+      "shortLabel": "QAR",
+      "isIso4217": true
+    },
+    "IRT": {
+      "code": "IRT",
+      "label": "Iranian Toman",
+      "shortLabel": "Toman",
+      "isIso4217": false
+    }
+  },
+  "manualRatesPerAED": {
+    "IRT": 35000
+  },
+  "fallbackRatesPerAED": {
+    "AED": 1,
+    "USD": 0.272294,
+    "EUR": 0.2515,
+    "GBP": 0.2145,
+    "AUD": 0.4185,
+    "CAD": 0.3785,
+    "SAR": 1.0207,
+    "KWD": 0.0838,
+    "QAR": 0.9912,
+    "IRT": 35000
+  },
+  "roundingSteps": {
+    "AED": 0,
+    "USD": 5,
+    "EUR": 5,
+    "GBP": 5,
+    "AUD": 5,
+    "CAD": 5,
+    "SAR": 5,
+    "KWD": 1,
+    "QAR": 5,
+    "IRT": 50000
+  },
+  "countryToCurrency": {
+    "AE": "AED",
+    "IR": "IRT",
+    "US": "USD",
+    "GB": "GBP",
+    "UK": "GBP",
+    "AU": "AUD",
+    "CA": "CAD",
+    "SA": "SAR",
+    "KW": "KWD",
+    "QA": "QAR",
+    "AT": "EUR",
+    "BE": "EUR",
+    "CY": "EUR",
+    "DE": "EUR",
+    "EE": "EUR",
+    "ES": "EUR",
+    "FI": "EUR",
+    "FR": "EUR",
+    "GR": "EUR",
+    "HR": "EUR",
+    "IE": "EUR",
+    "IT": "EUR",
+    "LT": "EUR",
+    "LU": "EUR",
+    "LV": "EUR",
+    "MT": "EUR",
+    "NL": "EUR",
+    "PT": "EUR",
+    "SI": "EUR",
+    "SK": "EUR",
+    "AD": "EUR",
+    "MC": "EUR",
+    "SM": "EUR",
+    "VA": "EUR",
+    "ME": "EUR",
+    "XK": "EUR"
+  }
+}
