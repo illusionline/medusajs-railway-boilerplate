@@ -772,14 +772,35 @@ class NgeniusPaymentProviderService extends AbstractPaymentProvider<NgeniusOptio
     )
 
     const payment = this.selectRelevantPayment(order)
+    const rawPaymentRef =
+      payment?.reference ||
+      payment?._id ||
+      (
+        (data?.paymentSummary as Record<string, unknown> | undefined)
+          ?.paymentReference as string | undefined
+      ) ||
+      ""
+    const cleanPaymentRef = String(rawPaymentRef)
+      .trim()
+      .replace(/^urn:payment:/i, "")
+
+    const directFallbackRefundHref = cleanPaymentRef
+      ? `${cfg.baseUrl}/transactions/outlets/${
+          cfg.outletRef
+        }/orders/${encodeURIComponent(
+          ngeniusOrderRef
+        )}/payments/${encodeURIComponent(cleanPaymentRef)}/refund`
+      : undefined
+
     const refundHref =
       this.extractCaptureRefundLink(payment) ||
-      (data?._ngeniusLinks as Record<string, string> | undefined)?.refund
+      (data?._ngeniusLinks as Record<string, string> | undefined)?.refund ||
+      directFallbackRefundHref
 
     if (!refundHref) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
-        `No N-Genius refund link available for order ${ngeniusOrderRef}.`
+        `No N-Genius refund link or paymentReference available for order ${ngeniusOrderRef}.`
       )
     }
 

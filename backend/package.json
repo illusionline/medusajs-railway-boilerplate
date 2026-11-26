@@ -24,18 +24,19 @@
     "build:ci": "medusa build"
   },
   "dependencies": {
-    "@medusajs/admin-shared": "2.13.1",
     "@medusajs/admin-sdk": "2.13.1",
+    "@medusajs/admin-shared": "2.13.1",
     "@medusajs/cli": "2.13.1",
-    "@medusajs/framework": "2.13.1",
-    "@medusajs/medusa": "2.13.1",
     "@medusajs/dashboard": "2.13.1",
     "@medusajs/draft-order": "2.13.1",
     "@medusajs/event-bus-redis": "2.13.1",
     "@medusajs/file-s3": "2.13.1",
+    "@medusajs/framework": "2.13.1",
+    "@medusajs/medusa": "2.13.1",
     "@medusajs/notification": "2.13.1",
     "@medusajs/payment-stripe": "2.13.1",
     "@medusajs/workflow-engine-redis": "2.13.1",
+    "nodemailer": "^10.6.1",
     "pg": "^8.16.3"
   },
   "devDependencies": {
@@ -44,6 +45,7 @@
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.13",
     "@types/node": "^20.12.11",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.2.25",
     "jest": "^29.7.0",
