@@ -13,17 +13,7 @@ import { createPortal } from "react-dom"
 import CountrySelect from "../country-select"
 import CurrencySwitcher from "../currency-switcher"
 import LanguageSelect from "../language-select"
-
-const SideMenuItems = [
-  { name: "New Arrivals", href: "/store?sortBy=created_at&filter=new-arrivals" },
-  { name: "Evening Gowns", href: "/store?filter=evening-gowns" },
-  { name: "Noir Edit", href: "/store?filter=noir-edit" },
-  { name: "Made-to-Measure", href: "/store?filter=made-to-measure" },
-  { name: "All Dresses", href: "/store" },
-  { name: "Measurement Guide", href: "/client-care#made-to-measure" },
-  { name: "Account", href: "/account" },
-  { name: "Shopping Bag", href: "/cart" },
-]
+import { SIDE_MENU_LINKS } from "@modules/layout/config/navigation"
 
 type SideMenuProps = {
   regions: HttpTypes.StoreRegion[] | null
@@ -37,6 +27,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
   const countryToggleState = useToggleState()
   const languageToggleState = useToggleState()
   const pathname = usePathname()
+  const menuItems = Array.isArray(SIDE_MENU_LINKS) ? SIDE_MENU_LINKS : []
 
   useEffect(() => {
     setMounted(true)
@@ -114,7 +105,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                   </div>
 
                   <ul className="flex flex-col gap-4 my-auto py-8">
-                    {SideMenuItems.map((item) => (
+                    {menuItems.map((item) => (
                       <li key={item.name}>
                         <LocalizedClientLink
                           href={item.href}

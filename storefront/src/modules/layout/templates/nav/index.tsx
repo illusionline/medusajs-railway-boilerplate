@@ -8,11 +8,10 @@ import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import CurrencySwitcher from "@modules/layout/components/currency-switcher"
-import HeaderCategoryNav, {
-  PRIMARY_NAV_LINKS,
-} from "@modules/layout/components/header-category-nav"
+import HeaderCategoryNav from "@modules/layout/components/header-category-nav"
 import HeaderSearch from "@modules/layout/components/header-search"
 import SideMenu from "@modules/layout/components/side-menu"
+import { PRIMARY_NAV_LINKS } from "@modules/layout/config/navigation"
 
 export default async function Nav() {
   const [regions, locales, currentLocale] = await Promise.all([
@@ -22,6 +21,8 @@ export default async function Nav() {
     listLocales().catch(() => null),
     getLocale().catch(() => null),
   ])
+
+  const navItems = Array.isArray(PRIMARY_NAV_LINKS) ? PRIMARY_NAV_LINKS : []
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 bg-[#000000] text-white">
@@ -114,7 +115,7 @@ export default async function Nav() {
               aria-label="Primary Navigation"
               className="hidden lg:flex items-center justify-center gap-x-10 h-[40px] bg-[#000000] border-t border-white/10 border-b border-white/15 px-8"
             >
-              {PRIMARY_NAV_LINKS.map((item) => (
+              {navItems.map((item) => (
                 <LocalizedClientLink
                   key={item.label}
                   href={item.href}
