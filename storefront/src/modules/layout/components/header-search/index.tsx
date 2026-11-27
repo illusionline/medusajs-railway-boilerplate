@@ -53,7 +53,7 @@ export default function HeaderSearch() {
         type="button"
         id="header-search-trigger"
         onClick={() => setOpen((prev) => !prev)}
-        className="h-full flex items-center text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A] hover:opacity-60 transition-opacity focus:outline-none"
+        className="h-full flex items-center text-[11px] uppercase tracking-[0.14em] text-white/90 hover:text-white transition-colors focus:outline-none"
         data-testid="nav-search-button"
       >
         Search
@@ -69,7 +69,7 @@ export default function HeaderSearch() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.18 }}
-                  className="fixed inset-0 bg-black/45"
+                  className="fixed inset-0 bg-black/65"
                   onClick={() => setOpen(false)}
                 />
                 <motion.div
@@ -77,12 +77,12 @@ export default function HeaderSearch() {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -12, opacity: 0 }}
                   transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative z-10 w-full bg-white border-b border-[#0A0A0A] px-4 md:px-8 py-6"
+                  className="relative z-10 w-full bg-[#000000] text-white border-b border-white/15 px-4 md:px-8 py-6"
                 >
                   <div className="max-w-[1440px] mx-auto">
                     <form
                       onSubmit={handleSubmit}
-                      className="flex items-center gap-3 border-b border-[#0A0A0A] pb-3"
+                      className="flex items-center gap-3 border-b border-white/25 pb-3"
                     >
                       <input
                         ref={inputRef}
@@ -90,18 +90,18 @@ export default function HeaderSearch() {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="SEARCH EVENING GOWNS, NOIR SILHOUETTES, CORSET, CAPE..."
-                        className="w-full bg-transparent text-xs md:text-sm uppercase tracking-[0.12em] text-[#0A0A0A] placeholder:text-[#0A0A0A]/40 focus:outline-none"
+                        className="w-full bg-transparent text-xs md:text-sm uppercase tracking-[0.14em] text-white placeholder:text-white/40 focus:outline-none"
                       />
                       <button
                         type="submit"
-                        className="px-5 py-2.5 bg-[#0A0A0A] text-white text-[11px] uppercase tracking-[0.16em] font-medium hover:bg-black/85 transition-colors shrink-0"
+                        className="px-5 py-2.5 bg-white text-[#000000] text-[11px] uppercase tracking-[0.16em] font-medium hover:bg-white/90 transition-colors shrink-0"
                       >
                         Search
                       </button>
                       <button
                         type="button"
                         onClick={() => setOpen(false)}
-                        className="px-3 py-2.5 text-[11px] uppercase tracking-[0.14em] text-[#0A0A0A]/65 hover:text-[#0A0A0A] shrink-0"
+                        className="px-3 py-2.5 text-[11px] uppercase tracking-[0.14em] text-white/70 hover:text-white shrink-0"
                       >
                         Close
                       </button>

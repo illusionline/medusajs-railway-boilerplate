@@ -1,15 +1,15 @@
 "use client"
 
+import IllusionLogo from "@components/brand/illusion-logo"
+import { Locale } from "@lib/data/locales"
 import { ArrowRightMini } from "@medusajs/icons"
+import { HttpTypes } from "@medusajs/types"
 import { clx, useToggleState } from "@medusajs/ui"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { AnimatePresence, motion } from "framer-motion"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
-
-import { Locale } from "@lib/data/locales"
-import { HttpTypes } from "@medusajs/types"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CountrySelect from "../country-select"
 import CurrencySwitcher from "../currency-switcher"
 import LanguageSelect from "../language-select"
@@ -60,10 +60,15 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
       <button
         type="button"
         data-testid="nav-menu-button"
+        aria-label="Open navigation menu"
         onClick={() => setIsOpen(true)}
-        className="h-full flex items-center text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A] hover:opacity-60 transition-opacity focus:outline-none"
+        className="h-full flex items-center gap-x-2 text-[11px] uppercase tracking-[0.14em] text-white/90 hover:text-white transition-colors focus:outline-none"
       >
-        Menu
+        <span className="flex flex-col gap-y-[3.5px] w-4" aria-hidden="true">
+          <span className="block h-px w-full bg-white" />
+          <span className="block h-px w-full bg-white" />
+        </span>
+        <span>Menu</span>
       </button>
 
       {mounted &&
@@ -76,7 +81,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.25 }}
-                  className="fixed inset-0 bg-black/60"
+                  className="fixed inset-0 bg-black/70"
                   onClick={() => setIsOpen(false)}
                   data-testid="side-menu-backdrop"
                 />
@@ -88,12 +93,16 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative z-10 w-full max-w-[380px] h-full bg-[#0A0A0A] text-white border-r border-[#222222] flex flex-col justify-between p-7 overflow-y-auto"
+                  className="relative z-10 w-full max-w-[380px] h-full bg-[#000000] text-white border-r border-white/15 flex flex-col justify-between p-7 overflow-y-auto"
                 >
-                  <div className="flex items-center justify-between border-b border-[#222222] pb-5">
-                    <span className="text-xs font-semibold uppercase tracking-[0.22em] text-white">
-                      ILLUSIONLINE
-                    </span>
+                  <div className="flex items-center justify-between border-b border-white/15 pb-5">
+                    <LocalizedClientLink
+                      href="/"
+                      onClick={() => setIsOpen(false)}
+                      aria-label="ILLUSION Home"
+                    >
+                      <IllusionLogo height={20} />
+                    </LocalizedClientLink>
                     <button
                       type="button"
                       data-testid="close-menu-button"
@@ -121,7 +130,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                     ))}
                   </ul>
 
-                  <div className="flex flex-col gap-y-5 border-t border-[#222222] pt-6 text-xs text-white/75">
+                  <div className="flex flex-col gap-y-5 border-t border-white/15 pt-6 text-xs text-white/75">
                     <CurrencySwitcher variant="drawer" />
 
                     {!!locales?.length && (
@@ -161,8 +170,8 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                         />
                       </div>
                     )}
-                    <p className="text-[10px] tracking-[0.14em] uppercase text-white/45">
-                      © {new Date().getFullYear()} ILLUSIONLINE
+                    <p className="text-[10px] tracking-[0.12em] uppercase text-white/45 leading-relaxed">
+                      © 2026 ILLUSION (@illusion.line) · illusionline.com
                     </p>
                   </div>
                 </motion.aside>

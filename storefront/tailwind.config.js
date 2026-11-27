@@ -96,6 +96,13 @@ module.exports = {
           "Times New Roman",
           "serif",
         ],
+        jost: [
+          "var(--font-jost)",
+          "Jost",
+          "-apple-system",
+          "Helvetica Neue",
+          "sans-serif",
+        ],
         editorial: [
           "var(--font-editorial)",
           "Inter",

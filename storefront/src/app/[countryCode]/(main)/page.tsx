@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import Image from "next/image"
 
+import IllusionLogo from "@components/brand/illusion-logo"
 import { listProducts } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
 import { HttpTypes } from "@medusajs/types"
@@ -10,9 +11,11 @@ import ProductPreview from "@modules/products/components/product-preview"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "ILLUSIONLINE — Architectural Eveningwear",
+  title: {
+    absolute: "ILLUSION — Official Online Atelier | illusionline.com",
+  },
   description:
-    "ILLUSIONLINE — Architectural Eveningwear. Ready-to-Wear & Bespoke Made-to-Measure.",
+    "ILLUSION (@illusion.line) — Official Online Atelier at illusionline.com. Architectural Eveningwear in Ready-to-Wear & Bespoke Made-to-Measure.",
 }
 
 const FALLBACK_EDITORIAL_IMAGE = "/images/hero-editorial.jpg"
@@ -535,12 +538,10 @@ export default async function Home(props: {
 
           {/* Dead-Center Typography Spanning the Seam */}
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
-            <span className="text-[11px] uppercase tracking-[0.26em] text-white/90">
-              ILLUSIONLINE
-            </span>
+            <IllusionLogo height={34} />
             <h2
               style={{ fontFamily: "var(--font-editorial)" }}
-              className="mt-2 text-3xl sm:text-4xl lg:text-[48px] leading-[1.06] font-medium uppercase tracking-[0.08em] text-white"
+              className="mt-4 text-3xl sm:text-4xl lg:text-[48px] leading-[1.06] font-medium uppercase tracking-[0.08em] text-white"
             >
               EVENING ARCHIVE
             </h2>

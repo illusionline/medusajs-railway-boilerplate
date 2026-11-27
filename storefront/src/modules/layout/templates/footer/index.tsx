@@ -1,10 +1,11 @@
+import IllusionLogo from "@components/brand/illusion-logo"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 export default async function Footer() {
   return (
-    <footer className="bg-[#0A0A0A] text-white border-t border-[#0A0A0A] w-full">
+    <footer className="bg-[#000000] text-white border-t border-white/15 w-full">
       {/* Top Dispatch & Atelier Notice Strip */}
-      <div className="border-b border-[#222222]">
+      <div className="border-b border-white/10">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-[0.16em] text-white/75">
           <span>COMPLIMENTARY UAE COURIER DELIVERY</span>
           <span className="hidden sm:inline text-white/30">|</span>
@@ -21,11 +22,12 @@ export default async function Footer() {
           <div className="md:col-span-5 flex flex-col gap-y-4 max-w-sm">
             <LocalizedClientLink
               href="/"
-              className="text-base md:text-lg font-semibold uppercase tracking-[0.22em] text-white hover:opacity-75 transition-opacity w-fit"
+              aria-label="ILLUSION — Official Online Atelier"
+              className="w-fit inline-flex items-center focus:outline-none"
             >
-              ILLUSIONLINE
+              <IllusionLogo height={28} />
             </LocalizedClientLink>
-            <p className="text-xs leading-relaxed text-white/65">
+            <p className="text-xs leading-relaxed text-white/65 pt-1">
               Architectural eveningwear conceived in sculptural silhouettes.
               Crafted in our Dubai atelier in standard sizing and individual
               made-to-measure commissions.
@@ -183,12 +185,16 @@ export default async function Footer() {
           </div>
         </div>
 
-        {/* Bottom Monochrome Bar */}
-        <div className="mt-14 pt-6 border-t border-[#222222] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[10px] tracking-[0.14em] uppercase text-white/45">
+        {/* Bottom Legal & Payment Descriptor Alignment Bar */}
+        <div className="mt-14 pt-6 border-t border-white/15 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 text-[10px] tracking-[0.1em] text-white/55">
           <span>
-            © {new Date().getFullYear()} ILLUSIONLINE. ALL RIGHTS RESERVED.
+            © 2026 ILLUSION (@illusion.line). Official Online Atelier at
+            illusionline.com — Operated by ILLUSIONLINE CLOTHING TRADING, Dubai,
+            UAE.
           </span>
-          <span>ALL TRANSACTIONS SETTLED IN AED · DUBAI, UAE</span>
+          <span className="uppercase tracking-[0.14em] text-white/45 shrink-0">
+            ALL TRANSACTIONS SETTLED IN AED
+          </span>
         </div>
       </div>
     </footer>

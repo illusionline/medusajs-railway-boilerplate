@@ -1,3 +1,4 @@
+import IllusionLogo from "@components/brand/illusion-logo"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ChevronDown from "@modules/common/icons/chevron-down"
 import CurrencySwitcher from "@modules/layout/components/currency-switcher"
@@ -8,13 +9,13 @@ export default function CheckoutLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="w-full bg-[#FAF9F6] text-[#0A0A0A] relative small:min-h-screen flex flex-col justify-between">
+    <div className="w-full bg-white text-[#0A0A0A] relative small:min-h-screen flex flex-col justify-between">
       <div>
-        <div className="h-16 small:h-20 bg-[#FAF9F6]/90 backdrop-blur-xl border-b border-[#1A1A1A]/15 sticky top-0 z-40">
-          <nav className="flex h-full items-center content-container justify-between">
+        <div className="h-[60px] small:h-[68px] bg-[#000000] text-white border-b border-white/15 sticky top-0 z-40">
+          <nav className="relative flex h-full items-center content-container justify-between">
             <LocalizedClientLink
               href="/cart"
-              className="text-[11px] tracking-[0.2em] text-[#0A0A0A]/75 hover:text-[#0A0A0A] flex items-center gap-x-2 uppercase flex-1 basis-0 transition-colors"
+              className="text-[11px] tracking-[0.14em] text-white/80 hover:text-white flex items-center gap-x-2 uppercase z-10 transition-colors"
               data-testid="back-to-cart-link"
             >
               <ChevronDown className="rotate-90" size={14} />
@@ -23,16 +24,24 @@ export default function CheckoutLayout({
               </span>
               <span className="mt-px block small:hidden">Bag</span>
             </LocalizedClientLink>
+
             <LocalizedClientLink
               href="/"
-              className="text-sm small:text-base uppercase tracking-[0.36em] text-[#0A0A0A] hover:opacity-75 transition-opacity pl-[0.36em]"
+              aria-label="ILLUSION — Official Online Atelier"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center py-1"
               data-testid="store-link"
             >
-              ILLUSIONLINE
+              <span className="hidden sm:inline-flex">
+                <IllusionLogo height={24} />
+              </span>
+              <span className="inline-flex sm:hidden">
+                <IllusionLogo height={20} />
+              </span>
             </LocalizedClientLink>
-            <div className="flex-1 basis-0 flex items-center justify-end gap-x-5 h-full">
+
+            <div className="flex items-center justify-end gap-x-5 h-full z-10">
               <CurrencySwitcher variant="header" />
-              <span className="hidden small:inline text-[10px] uppercase tracking-[0.2em] text-[#0A0A0A]/45">
+              <span className="hidden small:inline text-[10px] uppercase tracking-[0.16em] text-white/55">
                 AED Checkout
               </span>
             </div>
@@ -42,10 +51,18 @@ export default function CheckoutLayout({
           {children}
         </div>
       </div>
-      <div className="py-8 border-t border-[#0A0A0A]/10 w-full flex items-center justify-center text-[11px] uppercase tracking-[0.18em] text-[#0A0A0A]/45">
-        © {new Date().getFullYear()} ILLUSIONLINE · All Orders Settled in AED ·
-        Worldwide DHL Express
-      </div>
+
+      <footer className="py-7 px-4 md:px-8 border-t border-[#E5E5E5] bg-white w-full flex flex-col items-center justify-center gap-1.5 text-center">
+        <p className="text-[10px] uppercase tracking-[0.14em] text-[#0A0A0A]/65">
+          All Orders Settled in AED · Complimentary UAE Courier · Worldwide DHL
+          Express
+        </p>
+        <p className="text-[10px] tracking-[0.06em] text-[#0A0A0A]/50">
+          © 2026 ILLUSION (@illusion.line). Official Online Atelier at
+          illusionline.com — Operated by ILLUSIONLINE CLOTHING TRADING, Dubai,
+          UAE.
+        </p>
+      </footer>
     </div>
   )
 }

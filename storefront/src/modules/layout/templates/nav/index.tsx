@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 
+import IllusionLogo from "@components/brand/illusion-logo"
 import { getLocale } from "@lib/data/locale-actions"
 import { listLocales } from "@lib/data/locales"
 import { listRegions } from "@lib/data/regions"
@@ -7,36 +8,11 @@ import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import CurrencySwitcher from "@modules/layout/components/currency-switcher"
+import HeaderCategoryNav, {
+  PRIMARY_NAV_LINKS,
+} from "@modules/layout/components/header-category-nav"
 import HeaderSearch from "@modules/layout/components/header-search"
 import SideMenu from "@modules/layout/components/side-menu"
-
-const PRIMARY_NAV_LINKS = [
-  {
-    label: "New Arrivals",
-    href: "/store?sortBy=created_at&filter=new-arrivals",
-    testId: "nav-new-arrivals-link",
-  },
-  {
-    label: "Evening Gowns",
-    href: "/store?filter=evening-gowns",
-    testId: "nav-evening-gowns-link",
-  },
-  {
-    label: "Noir Edit",
-    href: "/store?filter=noir-edit",
-    testId: "nav-noir-edit-link",
-  },
-  {
-    label: "Made-to-Measure",
-    href: "/store?filter=made-to-measure",
-    testId: "nav-made-to-measure-link",
-  },
-  {
-    label: "All Dresses",
-    href: "/store",
-    testId: "nav-shop-all-link",
-  },
-]
 
 export default async function Nav() {
   const [regions, locales, currentLocale] = await Promise.all([
@@ -48,14 +24,14 @@ export default async function Nav() {
   ])
 
   return (
-    <div className="sticky top-0 inset-x-0 z-50 bg-white">
-      {/* Top Announcement Bar (#000000 bg, #FFFFFF text, 10px uppercase, tracking-[0.16em]) */}
-      <div className="w-full bg-[#000000] text-white h-9 border-b border-[#1A1A1A]">
+    <div className="sticky top-0 inset-x-0 z-50 bg-[#000000] text-white">
+      {/* Top Courier & Currency Strip (#000000 bg, border-b border-white/10) */}
+      <div className="w-full bg-[#000000] border-b border-white/10 h-9">
         <div className="max-w-[1440px] mx-auto h-full px-4 md:px-8 flex items-center justify-between gap-4">
           <div className="hidden lg:block w-28" aria-hidden="true" />
-          <p className="text-[10px] uppercase tracking-[0.16em] text-white truncate">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-white/80 truncate">
             <span>COMPLIMENTARY UAE COURIER</span>
-            <span className="mx-2.5 text-white/45">|</span>
+            <span className="mx-2.5 text-white/35">|</span>
             <span>WORLDWIDE DHL EXPRESS (AED 99)</span>
           </p>
           <div className="flex items-center justify-end shrink-0 lg:w-28 h-full">
@@ -64,12 +40,11 @@ export default async function Nav() {
         </div>
       </div>
 
-      {/* Main Sticky Header (#FFFFFF bg, 1px solid #EAEAEA bottom border) */}
-      <header className="relative bg-white border-b border-[#EAEAEA]">
-        {/* Row 1: Left Mobile Trigger / Atelier Link, Centered ILLUSIONLINE Wordmark, Right Utilities */}
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 h-14 md:h-16 grid grid-cols-3 items-center">
-          {/* Left */}
-          <div className="flex items-center justify-start h-full">
+      {/* Main Brand Row (#000000 bg, h-[64px] desktop / h-[56px] mobile) */}
+      <header className="relative bg-[#000000]">
+        <div className="relative max-w-[1440px] mx-auto px-4 md:px-8 h-[56px] lg:h-[64px] flex items-center justify-between border-b border-white/15 lg:border-b-0">
+          {/* Left: Desktop ATELIER BESPOKE / Mobile Hamburger Menu */}
+          <div className="flex items-center justify-start h-full z-10">
             <div className="lg:hidden h-full flex items-center">
               <SideMenu
                 regions={regions}
@@ -77,33 +52,39 @@ export default async function Nav() {
                 currentLocale={currentLocale}
               />
             </div>
-            <div className="hidden lg:flex items-center gap-x-6 h-full">
+            <div className="hidden lg:flex items-center h-full">
               <LocalizedClientLink
-                href="/client-care#made-to-measure"
-                className="text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/65 hover:text-[#0A0A0A] transition-colors"
+                href="/store?filter=made-to-measure"
+                className="text-[11px] uppercase tracking-[0.14em] text-white/85 hover:text-white transition-colors"
               >
                 Atelier Bespoke
               </LocalizedClientLink>
             </div>
           </div>
 
-          {/* Center: Bold, Sharply Tracked ILLUSIONLINE Wordmark */}
-          <div className="flex items-center justify-center h-full">
+          {/* Dead-Center: Official ILLUSION Vector Ring-Light Brand Mark */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
             <LocalizedClientLink
               href="/"
-              className="text-[15px] sm:text-[18px] md:text-[20px] font-semibold uppercase tracking-[0.22em] text-[#0A0A0A] hover:opacity-75 transition-opacity pl-[0.22em] whitespace-nowrap"
+              aria-label="ILLUSION — Official Online Atelier"
+              className="inline-flex items-center justify-center py-1 focus:outline-none"
               data-testid="nav-store-link"
             >
-              ILLUSIONLINE
+              <span className="hidden sm:inline-flex">
+                <IllusionLogo height={26} />
+              </span>
+              <span className="inline-flex sm:hidden">
+                <IllusionLogo height={22} />
+              </span>
             </LocalizedClientLink>
           </div>
 
           {/* Right Utilities: SEARCH / ACCOUNT / BAG (n) */}
-          <div className="flex items-center justify-end gap-x-4 sm:gap-x-6 h-full">
+          <div className="flex items-center justify-end gap-x-4 sm:gap-x-6 h-full z-10">
             <HeaderSearch />
 
             <LocalizedClientLink
-              className="hidden sm:flex items-center h-full text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A] hover:opacity-60 transition-opacity"
+              className="hidden sm:flex items-center h-full text-[11px] uppercase tracking-[0.14em] text-white/90 hover:text-white transition-colors"
               href="/account"
               data-testid="nav-account-link"
             >
@@ -113,7 +94,7 @@ export default async function Nav() {
             <Suspense
               fallback={
                 <LocalizedClientLink
-                  className="flex items-center h-full text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A] hover:opacity-60 transition-opacity"
+                  className="flex items-center h-full text-[11px] uppercase tracking-[0.14em] text-white/90 hover:text-white transition-colors"
                   href="/cart"
                   data-testid="nav-cart-link"
                 >
@@ -126,22 +107,28 @@ export default async function Nav() {
           </div>
         </div>
 
-        {/* Row 2 (Desktop): Centered Editorial Merchandising Navigation */}
-        <nav
-          aria-label="Primary Navigation"
-          className="hidden lg:flex items-center justify-center gap-x-10 h-10 border-t border-[#F2F2F2] px-8"
-        >
-          {PRIMARY_NAV_LINKS.map((item) => (
-            <LocalizedClientLink
-              key={item.label}
-              href={item.href}
-              data-testid={item.testId}
-              className="text-[11px] uppercase tracking-[0.12em] font-normal text-[#0A0A0A] hover:underline underline-offset-[6px] decoration-[#0A0A0A] transition-all"
+        {/* Second Tier Category Bar (#000000 bg, border-t border-white/10 border-b border-white/15, desktop h-[40px]) */}
+        <Suspense
+          fallback={
+            <nav
+              aria-label="Primary Navigation"
+              className="hidden lg:flex items-center justify-center gap-x-10 h-[40px] bg-[#000000] border-t border-white/10 border-b border-white/15 px-8"
             >
-              {item.label}
-            </LocalizedClientLink>
-          ))}
-        </nav>
+              {PRIMARY_NAV_LINKS.map((item) => (
+                <LocalizedClientLink
+                  key={item.label}
+                  href={item.href}
+                  data-testid={item.testId}
+                  className="text-[11px] uppercase tracking-[0.15em] text-white/80 hover:text-white transition-colors"
+                >
+                  {item.label}
+                </LocalizedClientLink>
+              ))}
+            </nav>
+          }
+        >
+          <HeaderCategoryNav />
+        </Suspense>
       </header>
     </div>
   )

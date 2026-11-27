@@ -39,7 +39,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         </div>
 
         {/* Right Sticky Column: Title, Price, Editorial Copy, Sizing Toggle & Bespoke Inputs */}
-        <div className="w-full small:sticky small:top-[136px] px-5 py-10 small:px-10 medium:px-14 large:px-16 small:py-12 flex flex-col gap-y-6 bg-white">
+        <div className="w-full small:sticky small:top-[148px] px-5 py-10 small:px-10 medium:px-14 large:px-16 small:py-12 flex flex-col gap-y-6 bg-white">
           <div className="flex flex-col gap-y-2.5">
             <div className="flex items-center gap-x-2 text-[11px] uppercase tracking-[0.14em] text-[#0A0A0A]/55">
               <LocalizedClientLink

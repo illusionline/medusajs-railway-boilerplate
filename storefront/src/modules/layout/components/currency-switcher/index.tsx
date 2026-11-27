@@ -77,7 +77,7 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
                 className={clx(
                   "h-8 text-[10px] uppercase tracking-[0.12em] border transition-colors",
                   active
-                    ? "bg-white text-[#0A0A0A] border-white font-semibold"
+                    ? "bg-white text-[#000000] border-white font-semibold"
                     : "bg-transparent text-white/75 border-white/20 hover:border-white hover:text-white"
                 )}
               >
@@ -108,10 +108,10 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
           activeMeta?.label || displayCurrency
         } (Settled in AED)`}
         className={clx(
-          "flex items-center gap-x-1.5 uppercase transition-colors py-1 focus:outline-none",
+          "flex items-center gap-x-1.5 uppercase transition-colors py-1 focus:outline-none text-white/85 hover:text-white",
           isTopbar
-            ? "text-[10px] tracking-[0.16em] text-white hover:text-white/75"
-            : "text-[11px] tracking-[0.12em] text-[#0A0A0A] hover:opacity-65"
+            ? "text-[10px] tracking-[0.16em]"
+            : "text-[11px] tracking-[0.14em]"
         )}
       >
         <span>
@@ -137,13 +137,13 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
             role="listbox"
             aria-label="Select display currency"
             data-lenis-prevent
-            className="absolute right-0 top-[calc(100%+4px)] z-[110] w-64 bg-white text-[#0A0A0A] border border-[#0A0A0A] shadow-xl py-1.5"
+            className="absolute right-0 top-[calc(100%+4px)] z-[110] w-64 bg-[#000000] text-white border border-white/[0.18] shadow-2xl py-1.5"
           >
-            <div className="px-4 py-2 border-b border-[#E5E5E5] flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-[0.16em] text-[#0A0A0A]/60 font-medium">
+            <div className="px-4 py-2 border-b border-white/10 flex items-center justify-between">
+              <span className="text-[10px] uppercase tracking-[0.16em] text-white/60 font-medium">
                 Display Currency
               </span>
-              <span className="text-[9px] uppercase tracking-[0.14em] text-[#0A0A0A]/45">
+              <span className="text-[9px] uppercase tracking-[0.14em] text-white/45">
                 AED Base
               </span>
             </div>
@@ -163,8 +163,8 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
                     className={clx(
                       "w-full px-4 py-2 text-left flex items-center justify-between text-xs transition-colors",
                       isSelected
-                        ? "bg-[#0A0A0A] text-white"
-                        : "text-[#0A0A0A] hover:bg-[#F7F7F5]"
+                        ? "bg-white text-[#000000]"
+                        : "text-white/85 hover:bg-white/10 hover:text-white"
                     )}
                   >
                     <span className="flex items-center gap-x-2.5">
@@ -174,7 +174,7 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
                       <span
                         className={clx(
                           "text-[11px]",
-                          isSelected ? "text-white/75" : "text-[#0A0A0A]/60"
+                          isSelected ? "text-[#000000]/70" : "text-white/55"
                         )}
                       >
                         {meta?.label}
@@ -184,7 +184,7 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
                       <span
                         className={clx(
                           "text-[9px] uppercase tracking-[0.14em]",
-                          isSelected ? "text-white/70" : "text-[#0A0A0A]/45"
+                          isSelected ? "text-[#000000]/65" : "text-white/45"
                         )}
                       >
                         Exact
@@ -195,10 +195,10 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
               })}
             </div>
 
-            <div className="px-4 pt-2 pb-1.5 border-t border-[#E5E5E5]">
-              <p className="text-[10px] leading-snug text-[#0A0A0A]/60">
+            <div className="px-4 pt-2 pb-1.5 border-t border-white/10">
+              <p className="text-[10px] leading-snug text-white/60">
                 All orders settle in{" "}
-                <strong className="font-semibold text-[#0A0A0A]">AED</strong> at
+                <strong className="font-semibold text-white">AED</strong> at
                 checkout.
               </p>
             </div>

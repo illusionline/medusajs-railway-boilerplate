@@ -89,7 +89,7 @@ const CartDropdown = ({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="h-full flex items-center text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A] hover:opacity-60 transition-opacity duration-200 focus:outline-none"
+        className="h-full flex items-center text-[11px] uppercase tracking-[0.14em] text-white/90 hover:text-white transition-colors duration-200 focus:outline-none"
         data-testid="nav-cart-link"
         aria-label={`Open shopping bag with ${totalItems} items`}
       >

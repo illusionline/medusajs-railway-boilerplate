@@ -4,7 +4,7 @@ import { getDisplayCurrencySnapshot } from "@lib/util/fx-display"
 import EditorialFontController from "@modules/common/components/editorial-font-controller"
 import SmoothScrollProvider from "@modules/common/components/smooth-scroll-provider"
 import { Metadata } from "next"
-import { Cormorant_Garamond, Inter } from "next/font/google"
+import { Cormorant_Garamond, Inter, Jost } from "next/font/google"
 import { Suspense } from "react"
 import "styles/globals.css"
 
@@ -23,14 +23,21 @@ const cormorantGaramond = Cormorant_Garamond({
   display: "swap",
 })
 
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["200", "300"],
+  variable: "--font-jost",
+  display: "swap",
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
   title: {
-    default: "ILLUSIONLINE — Architectural Eveningwear",
-    template: "%s | ILLUSIONLINE",
+    default: "ILLUSION — Official Online Atelier | illusionline.com",
+    template: "%s | ILLUSION — Official Online Atelier | illusionline.com",
   },
   description:
-    "ILLUSIONLINE — Architectural Eveningwear. Ready-to-Wear & Bespoke Made-to-Measure.",
+    "ILLUSION (@illusion.line) — Official Online Atelier at illusionline.com. Architectural Eveningwear in Ready-to-Wear & Bespoke Made-to-Measure.",
   robots: {
     index: false,
     follow: false,
@@ -50,7 +57,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html
       lang="en"
       data-mode="light"
-      className={`${inter.variable} ${cormorantGaramond.variable}`}
+      className={`${inter.variable} ${cormorantGaramond.variable} ${jost.variable}`}
     >
       <body className="bg-white text-[#0A0A0A] font-sans antialiased">
         <Suspense fallback={null}>
