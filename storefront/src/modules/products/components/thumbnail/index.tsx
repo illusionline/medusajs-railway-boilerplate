@@ -18,7 +18,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   thumbnail,
   images,
   size = "small",
-  alt = "ILLUSIONLINE Eveningwear",
+  alt = "ILLUSION Eveningwear",
   className,
   "data-testid": dataTestid,
 }) => {
@@ -32,7 +32,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   return (
     <div
       className={clx(
-        "relative w-full overflow-hidden p-0 bg-[#F7F7F5] border border-[#E5E5E5]",
+        "relative w-full overflow-hidden p-0 bg-[#F5F5F5]",
         className,
         {
           "aspect-[4/5]": size !== "square",
@@ -68,7 +68,7 @@ const ImageOrPlaceholder = ({
     <>
       <Image
         src={image}
-        alt={alt || "ILLUSIONLINE Eveningwear"}
+        alt={alt || "ILLUSION Eveningwear"}
         className="absolute inset-0 object-cover object-top"
         draggable={false}
         quality={85}
@@ -78,7 +78,7 @@ const ImageOrPlaceholder = ({
       {secondaryImage && secondaryImage !== image && size === "full" && (
         <Image
           src={secondaryImage}
-          alt={`${alt || "ILLUSIONLINE Eveningwear"} — Alternate View`}
+          alt={`${alt || "ILLUSION Eveningwear"} — Alternate View`}
           className="absolute inset-0 object-cover object-top opacity-0 group-hover:opacity-100 transition-opacity duration-100"
           draggable={false}
           quality={85}
@@ -88,7 +88,7 @@ const ImageOrPlaceholder = ({
       )}
     </>
   ) : (
-    <div className="w-full h-full absolute inset-0 flex flex-col items-center justify-center bg-[#F7F7F5] text-[#0A0A0A]/35">
+    <div className="w-full h-full absolute inset-0 flex flex-col items-center justify-center bg-[#F5F5F5] text-[#0A0A0A]/35">
       <PlaceholderImage size={size === "small" ? 16 : 24} />
     </div>
   )

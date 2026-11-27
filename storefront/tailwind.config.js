@@ -25,13 +25,13 @@ module.exports = {
       },
       colors: {
         canvas: "#FFFFFF",
-        mat: "#F7F7F5",
+        mat: "#F5F5F5",
         ink: "#0A0A0A",
         line: "#E5E5E5",
         obsidian: "#0A0A0A",
         alabaster: "#FFFFFF",
         hairline: "#E5E5E5",
-        stone: "#F7F7F5",
+        stone: "#F5F5F5",
         grey: {
           0: "#FFFFFF",
           5: "#F9FAFB",

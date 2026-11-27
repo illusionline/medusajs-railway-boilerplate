@@ -3,8 +3,8 @@ import React, { useId } from "react"
 
 export type IllusionLogoProps = {
   /**
-   * Rendered SVG height in px. Width scales proportionally (height * 4.68).
-   * Default navbar height: 26px (~122px width).
+   * Rendered SVG height in px. Width scales proportionally (height * 4.538).
+   * Default navbar height: 26px -> 118px × 26px exact studio match.
    */
   height?: number
   className?: string
@@ -12,12 +12,14 @@ export type IllusionLogoProps = {
 }
 
 /**
- * Official ILLUSION House Brand Mark
- * Locked Studio Calibration:
- * - Jost ExtraLight 200 pure Bauhaus geometric vector primitives (viewBox="0 0 468 100")
- * - Cap-height y=16..84 (68u), strokeWidth=4.6, Tracking=19.5u, O-Pad=+5.0
- * - Studio Ring-Light optical 'O' (cx=366, cy=50, r=31) with dual-stage Gaussian bloom
- *   + Variant C Hover Catchlight Dimmer pulse
+ * Official ILLUSION House Brand Mark — 1:1 Studio Optical Calibration
+ * - viewBox="0 0 454 100" (aspect ratio 4.538 -> 118 × 26px at height=26)
+ * - Jost ExtraLight 200 hairline geometry: strokeWidth="4.2" (~1.1px–1.3px screen)
+ * - Tracking: 19.5u, O-Pad: +5.0 clearance on both sides of 'O'
+ * - Studio Ring-Light 'O' (cx=349, cy=50, r=26.5):
+ *   1) Outer Atmosphere Bloom (stdDeviation="16", Variant C hover pulse 0.48 -> 0.80)
+ *   2) Primary 3.2px Screen-Equivalent Optical Halo (stdDeviation="12.3", opacity="0.92")
+ *   3) Solid Illuminated Studio Ring Core (strokeWidth="13.5", Ring 8.8 optical body)
  */
 export const IllusionLogo: React.FC<IllusionLogoProps> = ({
   height = 26,
@@ -26,21 +28,21 @@ export const IllusionLogo: React.FC<IllusionLogoProps> = ({
 }) => {
   const rawId = useId()
   const safeId = rawId.replace(/[^a-zA-Z0-9_-]/g, "")
-  const ringFilterId = `illusion-ring-light-${safeId}`
-  const catchlightFilterId = `illusion-ring-catchlight-${safeId}`
-  const width = Math.round(height * 4.68)
+  const outerGlowId = `illusion-outer-glow-${safeId}`
+  const midGlowId = `illusion-mid-glow-${safeId}`
+  const width = Math.round(height * 4.538)
 
   return (
     <span
       className={clx(
-        "group/logo inline-flex items-center justify-center select-none leading-none",
+        "group/logo group inline-flex items-center justify-center select-none leading-none",
         className
       )}
     >
       <svg
         width={width}
         height={height}
-        viewBox="0 0 468 100"
+        viewBox="0 0 454 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         overflow="visible"
@@ -49,122 +51,98 @@ export const IllusionLogo: React.FC<IllusionLogoProps> = ({
         className="overflow-visible block shrink-0"
       >
         <defs>
-          {/* Studio Ring-Light Dual-Stage Optical Bloom */}
+          {/* Layer 1 Filter: Outer Studio Atmosphere Bloom (stdDeviation="16") */}
           <filter
-            id={ringFilterId}
-            x="-60%"
-            y="-60%"
-            width="220%"
-            height="220%"
+            id={outerGlowId}
+            filterUnits="userSpaceOnUse"
+            x="260"
+            y="-40"
+            width="180"
+            height="180"
             colorInterpolationFilters="sRGB"
           >
-            <feGaussianBlur
-              in="SourceGraphic"
-              stdDeviation="8.5"
-              result="outerStudioBloomRaw"
-            />
-            <feComponentTransfer
-              in="outerStudioBloomRaw"
-              result="outerStudioBloom"
-            >
-              <feFuncA type="linear" slope="0.55" />
-            </feComponentTransfer>
-
-            <feGaussianBlur
-              in="SourceGraphic"
-              stdDeviation="3.2"
-              result="innerOpticalHaloRaw"
-            />
-            <feComponentTransfer
-              in="innerOpticalHaloRaw"
-              result="innerOpticalHalo"
-            >
-              <feFuncA type="linear" slope="0.88" />
-            </feComponentTransfer>
-
-            <feMerge>
-              <feMergeNode in="outerStudioBloom" />
-              <feMergeNode in="innerOpticalHalo" />
-            </feMerge>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="16" />
           </filter>
 
-          {/* Variant C Hover Catchlight Dimmer Aura */}
+          {/* Layer 2 Filter: 3.2px Screen-Equivalent Optical Halo (3.2 * 3.846 = 12.3) */}
           <filter
-            id={catchlightFilterId}
-            x="-85%"
-            y="-85%"
-            width="270%"
-            height="270%"
+            id={midGlowId}
+            filterUnits="userSpaceOnUse"
+            x="260"
+            y="-40"
+            width="180"
+            height="180"
             colorInterpolationFilters="sRGB"
           >
-            <feGaussianBlur in="SourceGraphic" stdDeviation="13" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="12.3" />
           </filter>
         </defs>
 
-        {/* Jost ExtraLight 200 Geometric Letterforms: I L L U S I _ N */}
+        {/* Crisp Jost 200 Hairline Letters (strokeWidth="4.2") */}
         <g
           stroke="#FFFFFF"
-          strokeWidth="4.6"
+          strokeWidth="4.2"
+          fill="none"
           strokeLinecap="butt"
           strokeLinejoin="miter"
           strokeMiterlimit="10"
-          fill="none"
         >
           {/* I #1 */}
-          <line x1="16" y1="16" x2="16" y2="84" />
+          <line x1="12" y1="18" x2="12" y2="82" />
 
           {/* L #1 */}
-          <path d="M 48 16 L 48 84 L 82 84" />
+          <path d="M 42 18 L 42 82 L 73 82" />
 
           {/* L #2 */}
-          <path d="M 108 16 L 108 84 L 142 84" />
+          <path d="M 98 18 L 98 82 L 129 82" />
 
           {/* U */}
-          <path d="M 168 16 L 168 58 C 168 74 179 84.5 194 84.5 C 209 84.5 220 74 220 58 L 220 16" />
+          <path d="M 154 18 L 154 57 C 154 72.5 164.5 82.5 179 82.5 C 193.5 82.5 204 72.5 204 57 L 204 18" />
 
-          {/* S — Pure Bauhaus Jost 200 Spine */}
-          <path d="M 284 26 C 279 19 272 15.5 263 15.5 C 250 15.5 242 22.5 242 32 C 242 41.5 250 46 264 49.5 C 278 53 286 58 286 68.5 C 286 78.5 277 84.5 263 84.5 C 252 84.5 244 79.5 239 71" />
+          {/* S */}
+          <path d="M 265 27.5 C 260.5 21 253.5 17.5 245 17.5 C 232.5 17.5 225 24 225 33 C 225 42 232.5 46.2 246 49.5 C 259.5 52.8 267 57.5 267 67.5 C 267 77 258.5 82.5 245 82.5 C 234.5 82.5 227 78 222 69.5" />
 
           {/* I #2 */}
-          <line x1="314" y1="16" x2="314" y2="84" />
+          <line x1="294" y1="18" x2="294" y2="82" />
 
-          {/* N — Mitered Bauhaus Jost Vertices after +5.0 O-Pad */}
-          <path d="M 418 84 L 418 17 L 462 83 L 462 16" />
+          {/* N (after +5.0 O-Pad clearance) */}
+          <path d="M 404 82 L 404 18.5 L 444 81.5 L 444 18" />
         </g>
 
-        {/* Studio Ring-Light Optical 'O' (cx=366, cy=50, r=31) */}
+        {/* Locked Optical Studio Ring-Light 'O' (cx=349, cy=50, r=26.5) */}
         <g>
-          {/* Resting Dual-Stage Studio Bloom */}
+          {/* 1) Outer Studio Atmosphere Bloom (Variant C Hover Pulse) */}
           <circle
-            cx="366"
+            cx="349"
             cy="50"
-            r="31"
+            r="26.5"
             stroke="#FFFFFF"
-            strokeWidth="7.8"
+            strokeWidth="18"
             fill="none"
-            filter={`url(#${ringFilterId})`}
-            className="opacity-95 group-hover/logo:opacity-100 group-hover:opacity-100 transition-opacity duration-500 ease-out"
+            opacity="0.48"
+            className="transition-opacity duration-500 ease-out group-hover/logo:opacity-80 group-hover:opacity-80"
+            filter={`url(#${outerGlowId})`}
           />
 
-          {/* Variant C Hover Catchlight Pulse (Zero Layout Shift) */}
+          {/* 2) Primary 3.2px Screen-Equivalent Optical Halo */}
           <circle
-            cx="366"
+            cx="349"
             cy="50"
-            r="31"
+            r="26.5"
             stroke="#FFFFFF"
-            strokeWidth="9.6"
+            strokeWidth="15.5"
             fill="none"
-            filter={`url(#${catchlightFilterId})`}
-            className="opacity-0 group-hover/logo:opacity-65 group-hover:opacity-65 transition-opacity duration-500 ease-out"
+            opacity="0.92"
+            filter={`url(#${midGlowId})`}
           />
 
-          {/* Crisp Illuminated Inner LED Ring Tube */}
+          {/* 3) Solid Illuminated Studio Ring Core (Ring 8.8) */}
           <circle
-            cx="366"
+            cx="349"
             cy="50"
-            r="31"
+            r="26.5"
             stroke="#FFFFFF"
-            strokeWidth="7.8"
+            strokeWidth="13.5"
             fill="none"
           />
         </g>
