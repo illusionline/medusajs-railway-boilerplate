@@ -3,22 +3,38 @@
 @import "tailwindcss/utilities";
 
 @layer base {
+  :root {
+    --font-editorial: var(--font-sans), "Inter", -apple-system, "Helvetica Neue", sans-serif;
+    --font-display: var(--font-editorial);
+  }
+
+  html[data-editorial-font="serif"] {
+    --font-editorial: var(--font-serif), "Cormorant Garamond", Georgia, serif;
+    --font-display: var(--font-serif), "Cormorant Garamond", Georgia, serif;
+  }
+
+  *,
+  *::before,
+  *::after {
+    border-radius: 0px !important;
+  }
+
   html {
-    background-color: #faf9f6;
+    background-color: #ffffff;
     color: #0a0a0a;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background-color: #faf9f6;
+    background-color: #ffffff;
     color: #0a0a0a;
     overflow-x: hidden;
   }
 
   ::selection {
     background-color: #0a0a0a;
-    color: #faf9f6;
+    color: #ffffff;
   }
 
   html.lenis,
@@ -40,7 +56,6 @@
 }
 
 @layer utilities {
-  /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -50,8 +65,15 @@
   }
 
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .editorial-headline {
+    font-family: var(--font-editorial);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   input:focus ~ label,
@@ -72,9 +94,9 @@
   select:-webkit-autofill,
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus {
-    border: 1px solid #1a1a1a;
+    border: 1px solid #0a0a0a;
     -webkit-text-fill-color: #0a0a0a;
-    -webkit-box-shadow: 0 0 0px 1000px #faf9f6 inset;
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
     transition: background-color 5000s ease-in-out 0s;
   }
 
@@ -88,15 +110,15 @@
 
 @layer components {
   .content-container {
-    @apply max-w-[1440px] w-full mx-auto px-6 small:px-10;
+    @apply max-w-[1440px] w-full mx-auto px-4 md:px-8;
   }
 
   .luxury-wordmark {
-    @apply font-sans uppercase tracking-[0.34em] font-light text-[#0A0A0A];
+    @apply font-sans uppercase tracking-[0.22em] font-semibold text-[#0A0A0A];
   }
 
   .contrast-btn {
-    @apply px-6 py-3 border border-[#0A0A0A] text-xs uppercase tracking-[0.2em] hover:bg-[#0A0A0A] hover:text-[#FAF9F6] transition-colors duration-300 ease-out;
+    @apply px-6 py-3 border border-[#0A0A0A] text-[11px] uppercase tracking-[0.16em] hover:bg-[#0A0A0A] hover:text-[#FFFFFF] transition-colors duration-200;
   }
 
   .text-xsmall-regular {

@@ -1,4 +1,4 @@
-import { Container, clx } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
 import Image from "next/image"
 import React from "react"
 
@@ -9,6 +9,7 @@ type ThumbnailProps = {
   images?: any[] | null
   size?: "small" | "medium" | "large" | "full" | "square" | "portrait"
   isFeatured?: boolean
+  alt?: string
   className?: string
   "data-testid"?: string
 }
@@ -17,16 +18,21 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   thumbnail,
   images,
   size = "small",
+  alt = "ILLUSIONLINE Eveningwear",
   className,
   "data-testid": dataTestid,
 }) => {
   const initialImage = thumbnail || images?.[0]?.url
-  const secondaryImage = images?.[1]?.url
+  const secondaryImage =
+    images?.find((img) => img?.url && img.url !== initialImage)?.url ||
+    (images?.[1]?.url && images[1].url !== initialImage
+      ? images[1].url
+      : undefined)
 
   return (
-    <Container
+    <div
       className={clx(
-        "relative w-full overflow-hidden p-0 bg-[#F2EFE9] border border-[#0A0A0A]/10 rounded-none shadow-none",
+        "relative w-full overflow-hidden p-0 bg-[#F7F7F5] border border-[#E5E5E5]",
         className,
         {
           "aspect-[4/5]": size !== "square",
@@ -43,8 +49,9 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
         image={initialImage}
         secondaryImage={secondaryImage}
         size={size}
+        alt={alt}
       />
-    </Container>
+    </div>
   )
 }
 
@@ -52,7 +59,8 @@ const ImageOrPlaceholder = ({
   image,
   secondaryImage,
   size,
-}: Pick<ThumbnailProps, "size"> & {
+  alt,
+}: Pick<ThumbnailProps, "size" | "alt"> & {
   image?: string
   secondaryImage?: string
 }) => {
@@ -60,27 +68,27 @@ const ImageOrPlaceholder = ({
     <>
       <Image
         src={image}
-        alt="ILLUSIONLINE eveningwear"
-        className="absolute inset-0 object-cover object-center transition-transform duration-700 ease-luxury group-hover:scale-[1.04]"
+        alt={alt || "ILLUSIONLINE Eveningwear"}
+        className="absolute inset-0 object-cover object-top"
         draggable={false}
-        quality={80}
-        sizes="(max-width: 576px) 50vw, (max-width: 992px) 33vw, 420px"
+        quality={85}
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         fill
       />
       {secondaryImage && secondaryImage !== image && size === "full" && (
         <Image
           src={secondaryImage}
-          alt="ILLUSIONLINE alternate view"
-          className="absolute inset-0 object-cover object-center opacity-0 group-hover:opacity-100 transition-all duration-700 ease-luxury group-hover:scale-[1.04]"
+          alt={`${alt || "ILLUSIONLINE Eveningwear"} — Alternate View`}
+          className="absolute inset-0 object-cover object-top opacity-0 group-hover:opacity-100 transition-opacity duration-100"
           draggable={false}
-          quality={80}
-          sizes="(max-width: 576px) 50vw, (max-width: 992px) 33vw, 420px"
+          quality={85}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           fill
         />
       )}
     </>
   ) : (
-    <div className="w-full h-full absolute inset-0 flex flex-col items-center justify-center bg-[#F2EFE9] text-[#0A0A0A]/40">
+    <div className="w-full h-full absolute inset-0 flex flex-col items-center justify-center bg-[#F7F7F5] text-[#0A0A0A]/35">
       <PlaceholderImage size={size === "small" ? 16 : 24} />
     </div>
   )

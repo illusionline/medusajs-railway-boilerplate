@@ -359,28 +359,28 @@ export default function ProductActions({
       : fallbackStandardSize
 
   return (
-    <div className="flex flex-col gap-y-7">
+    <div className="flex flex-col gap-y-6">
       {/* Live Regional / AED Price */}
       <ProductPrice product={product} variant={effectiveVariant} />
 
       {/* Concise Editorial Description */}
       {product.description && (
         <p
-          className="text-xs small:text-sm leading-relaxed text-[#0A0A0A]/75 whitespace-pre-line font-light"
+          className="text-xs leading-relaxed text-[#0A0A0A]/75 whitespace-pre-line font-normal"
           data-testid="product-description"
         >
           {product.description}
         </p>
       )}
 
-      <div className="h-px w-full bg-[#0A0A0A]/10" />
+      <div className="h-px w-full bg-[#E5E5E5]" />
 
       {/* Secondary Non-Size Options (e.g. Color, if present) */}
       {otherOptions.length > 0 && (
         <div className="flex flex-col gap-y-4">
           {otherOptions.map((option) => (
             <div key={option.id} className="flex flex-col gap-y-2.5">
-              <span className="text-[11px] uppercase tracking-[0.2em] text-[#0A0A0A]/65">
+              <span className="text-[11px] uppercase tracking-[0.14em] font-medium text-[#0A0A0A]">
                 {option.title}
               </span>
               <div className="flex flex-wrap gap-2">
@@ -393,10 +393,10 @@ export default function ProductActions({
                       disabled={!!disabled || isAdding}
                       onClick={() => setOptionValue(option.id, val.value)}
                       className={clx(
-                        "px-4 h-10 text-xs uppercase tracking-[0.16em] border transition-colors duration-200",
+                        "px-4 h-10 text-[11px] uppercase tracking-[0.14em] border transition-colors duration-150",
                         active
-                          ? "bg-[#0A0A0A] text-[#FAF9F6] border-[#0A0A0A]"
-                          : "bg-transparent text-[#0A0A0A] border-[#0A0A0A]/20 hover:border-[#0A0A0A]"
+                          ? "bg-[#0A0A0A] text-white border-[#0A0A0A] font-medium"
+                          : "bg-white text-[#0A0A0A] border-[#E5E5E5] hover:border-[#0A0A0A]"
                       )}
                     >
                       {val.value}
@@ -412,12 +412,12 @@ export default function ProductActions({
       {/* Interactive Sizing Mode Toggle: Standard Size vs Made-to-Measure */}
       <div className="flex flex-col gap-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] uppercase tracking-[0.22em] text-[#0A0A0A]/70">
+          <span className="text-[11px] uppercase tracking-[0.14em] font-medium text-[#0A0A0A]">
             Tailoring &amp; Fit
           </span>
           <LocalizedClientLink
             href="/client-care#made-to-measure"
-            className="text-[11px] uppercase tracking-[0.18em] text-[#0A0A0A]/55 hover:text-[#0A0A0A] underline underline-offset-4 transition-colors"
+            className="text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/65 hover:text-[#0A0A0A] underline underline-offset-4 transition-colors"
           >
             Measurement Guide
           </LocalizedClientLink>
@@ -426,7 +426,7 @@ export default function ProductActions({
         <div
           role="tablist"
           aria-label="Sizing Mode"
-          className="grid grid-cols-2 p-1 border border-[#0A0A0A]/20 bg-[#F2EFE9]/55 relative"
+          className="grid grid-cols-2 border border-[#0A0A0A] bg-[#F7F7F5] relative"
         >
           <button
             type="button"
@@ -436,19 +436,12 @@ export default function ProductActions({
             disabled={!!disabled || isAdding}
             data-testid="sizing-mode-standard"
             className={clx(
-              "relative z-10 h-10 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300",
+              "relative z-10 h-11 text-[11px] uppercase tracking-[0.14em] transition-colors duration-200",
               sizingMode === "standard"
-                ? "text-[#FAF9F6] font-medium"
-                : "text-[#0A0A0A]/70 hover:text-[#0A0A0A]"
+                ? "bg-[#0A0A0A] text-white font-medium"
+                : "text-[#0A0A0A]/75 hover:text-[#0A0A0A]"
             )}
           >
-            {sizingMode === "standard" && (
-              <motion.span
-                layoutId="sizing-mode-pill"
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 bg-[#0A0A0A] -z-10"
-              />
-            )}
             Standard Size
           </button>
 
@@ -460,32 +453,25 @@ export default function ProductActions({
             disabled={!!disabled || isAdding}
             data-testid="sizing-mode-mtm"
             className={clx(
-              "relative z-10 h-10 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300",
+              "relative z-10 h-11 text-[11px] uppercase tracking-[0.14em] border-l border-[#0A0A0A] transition-colors duration-200",
               sizingMode === "mtm"
-                ? "text-[#FAF9F6] font-medium"
-                : "text-[#0A0A0A]/70 hover:text-[#0A0A0A]"
+                ? "bg-[#0A0A0A] text-white font-medium"
+                : "text-[#0A0A0A]/75 hover:text-[#0A0A0A]"
             )}
           >
-            {sizingMode === "mtm" && (
-              <motion.span
-                layoutId="sizing-mode-pill"
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 bg-[#0A0A0A] -z-10"
-              />
-            )}
             Made-to-Measure
           </button>
         </div>
 
-        {/* Mode Content: Standard Pills vs Animated Made-to-Measure Panel */}
+        {/* Mode Content: Standard Rectangular Buttons vs Animated Made-to-Measure Panel */}
         <AnimatePresence mode="wait" initial={false}>
           {sizingMode === "standard" ? (
             <motion.div
               key="standard-sizes"
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2 }}
               className="pt-1 flex flex-col gap-y-3"
               data-testid="product-options"
             >
@@ -513,12 +499,12 @@ export default function ProductActions({
                       }}
                       data-testid="option-button"
                       className={clx(
-                        "h-11 rounded-full text-xs uppercase tracking-[0.16em] border transition-all duration-200",
+                        "h-11 text-[11px] uppercase tracking-[0.14em] border transition-colors duration-150",
                         isSelected
-                          ? "bg-[#0A0A0A] text-[#FAF9F6] border-[#0A0A0A] font-medium"
+                          ? "bg-[#0A0A0A] text-white border-[#0A0A0A] font-medium"
                           : available
-                          ? "bg-transparent text-[#0A0A0A] border-[#0A0A0A]/20 hover:border-[#0A0A0A]"
-                          : "bg-transparent text-[#0A0A0A]/30 border-[#0A0A0A]/10 line-through"
+                          ? "bg-white text-[#0A0A0A] border-[#E5E5E5] hover:border-[#0A0A0A]"
+                          : "bg-[#F7F7F5] text-[#0A0A0A]/30 border-[#E5E5E5] line-through"
                       )}
                     >
                       {sizeVal}
@@ -526,7 +512,7 @@ export default function ProductActions({
                   )
                 })}
               </div>
-              <p className="text-[11px] text-[#0A0A0A]/55">
+              <p className="text-[11px] text-[#0A0A0A]/60">
                 True to ILLUSIONLINE atelier sizing. Need bespoke proportions?
                 Select Made-to-Measure above.
               </p>
@@ -537,17 +523,17 @@ export default function ProductActions({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="overflow-hidden"
             >
-              <div className="pt-2 pb-1 space-y-4 border-t border-[#0A0A0A]/10">
+              <div className="pt-3 pb-1 space-y-4 border-t border-[#E5E5E5]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase tracking-[0.24em] text-[#0A0A0A]/65">
+                  <span className="text-[11px] uppercase tracking-[0.14em] font-medium text-[#0A0A0A]">
                     Bespoke Atelier Specification
                   </span>
                   {customVariant && (
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#0A0A0A]">
-                      Variant: {customVariant.title}
+                    <span className="text-[10px] uppercase tracking-[0.14em] text-[#0A0A0A]/60">
+                      {customVariant.title}
                     </span>
                   )}
                 </div>
@@ -556,7 +542,7 @@ export default function ProductActions({
                   <div>
                     <label
                       htmlFor="mtm-bust"
-                      className="block text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/65 mb-1.5"
+                      className="block text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/75 mb-1.5"
                     >
                       Bust (cm) *
                     </label>
@@ -575,14 +561,14 @@ export default function ProductActions({
                           bust: e.target.value,
                         }))
                       }
-                      className="w-full h-11 px-3.5 bg-transparent border border-[#0A0A0A]/25 text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
+                      className="w-full h-11 px-3.5 bg-white border border-[#E5E5E5] text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="mtm-waist"
-                      className="block text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/65 mb-1.5"
+                      className="block text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/75 mb-1.5"
                     >
                       Waist (cm) *
                     </label>
@@ -601,14 +587,14 @@ export default function ProductActions({
                           waist: e.target.value,
                         }))
                       }
-                      className="w-full h-11 px-3.5 bg-transparent border border-[#0A0A0A]/25 text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
+                      className="w-full h-11 px-3.5 bg-white border border-[#E5E5E5] text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="mtm-hips"
-                      className="block text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/65 mb-1.5"
+                      className="block text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/75 mb-1.5"
                     >
                       Hips (cm) *
                     </label>
@@ -627,14 +613,14 @@ export default function ProductActions({
                           hips: e.target.value,
                         }))
                       }
-                      className="w-full h-11 px-3.5 bg-transparent border border-[#0A0A0A]/25 text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
+                      className="w-full h-11 px-3.5 bg-white border border-[#E5E5E5] text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="mtm-hollow-to-hem"
-                      className="block text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/65 mb-1.5"
+                      className="block text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/75 mb-1.5"
                     >
                       Hollow to Hem (cm)
                     </label>
@@ -653,7 +639,7 @@ export default function ProductActions({
                           hollowToHem: e.target.value,
                         }))
                       }
-                      className="w-full h-11 px-3.5 bg-transparent border border-[#0A0A0A]/25 text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
+                      className="w-full h-11 px-3.5 bg-white border border-[#E5E5E5] text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
                     />
                   </div>
                 </div>
@@ -661,7 +647,7 @@ export default function ProductActions({
                 <div>
                   <label
                     htmlFor="mtm-height"
-                    className="block text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/65 mb-1.5"
+                    className="block text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/75 mb-1.5"
                   >
                     Height (cm)
                   </label>
@@ -680,14 +666,14 @@ export default function ProductActions({
                         height: e.target.value,
                       }))
                     }
-                    className="w-full h-11 px-3.5 bg-transparent border border-[#0A0A0A]/25 text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
+                    className="w-full h-11 px-3.5 bg-white border border-[#E5E5E5] text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="mtm-notes"
-                    className="block text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/65 mb-1.5"
+                    className="block text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A]/75 mb-1.5"
                   >
                     Event Date / Styling Notes
                   </label>
@@ -702,11 +688,11 @@ export default function ProductActions({
                         notes: e.target.value,
                       }))
                     }
-                    className="w-full p-3.5 bg-transparent border border-[#0A0A0A]/25 text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors resize-none"
+                    className="w-full p-3.5 bg-white border border-[#E5E5E5] text-xs text-[#0A0A0A] placeholder:text-[#0A0A0A]/35 focus:outline-none focus:border-[#0A0A0A] transition-colors resize-none"
                   />
                 </div>
 
-                <p className="text-xs italic font-display tracking-wide text-[#0A0A0A]/80 border-l-2 border-[#0A0A0A] pl-3 py-0.5">
+                <p className="text-[11px] text-[#0A0A0A]/75 border-l-2 border-[#0A0A0A] pl-3 py-0.5">
                   Complimentary minor tailoring adjustments included.
                 </p>
               </div>
@@ -718,7 +704,7 @@ export default function ProductActions({
       {validationError && (
         <p
           role="alert"
-          className="text-xs text-[#0A0A0A] bg-[#F2EFE9] border-l-2 border-[#0A0A0A] px-3.5 py-2.5"
+          className="text-xs text-[#0A0A0A] bg-[#F7F7F5] border-l-2 border-[#0A0A0A] px-3.5 py-2.5"
         >
           {validationError}
         </p>
@@ -731,10 +717,10 @@ export default function ProductActions({
         disabled={!inStock || !effectiveVariant || !!disabled || isAdding}
         data-testid="add-product-button"
         className={clx(
-          "w-full h-14 text-xs uppercase tracking-[0.26em] font-medium transition-all duration-300 flex items-center justify-center",
+          "w-full h-13 py-4 text-[11px] uppercase tracking-[0.2em] font-medium transition-colors duration-200 flex items-center justify-center",
           !inStock || !effectiveVariant || !!disabled
-            ? "bg-[#0A0A0A]/20 text-[#0A0A0A]/50 cursor-not-allowed"
-            : "bg-[#0A0A0A] text-[#FAF9F6] hover:bg-[#1A1A1A]"
+            ? "bg-[#E5E5E5] text-[#0A0A0A]/45 cursor-not-allowed"
+            : "bg-[#0A0A0A] text-white hover:bg-black/85"
         )}
       >
         {isAdding
@@ -749,10 +735,10 @@ export default function ProductActions({
       </button>
 
       {/* Subtle Client Care Reassurance */}
-      <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-[#0A0A0A]/50">
-        <span>Worldwide DHL Express</span>
-        <span>·</span>
-        <span>Atelier Quality Inspected</span>
+      <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-[#0A0A0A]/55 pt-1">
+        <span>Complimentary UAE Courier</span>
+        <span>|</span>
+        <span>DHL Express Worldwide (AED 99)</span>
       </div>
     </div>
   )

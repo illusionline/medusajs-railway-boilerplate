@@ -70,9 +70,9 @@ const ImageGallery = ({
 
   if (validImages.length === 0) {
     return (
-      <div className="w-full aspect-[4/5] bg-[#F2EFE9] flex flex-col items-center justify-center text-[#0A0A0A]/35">
+      <div className="w-full aspect-[4/5] bg-[#F7F7F5] flex flex-col items-center justify-center text-[#0A0A0A]/35">
         <PlaceholderImage size={32} />
-        <span className="mt-3 text-[10px] uppercase tracking-[0.26em]">
+        <span className="mt-3 text-[11px] uppercase tracking-[0.18em]">
           Editorial Imagery Pending
         </span>
       </div>
@@ -85,7 +85,7 @@ const ImageGallery = ({
   return (
     <>
       {/* Edge-to-edge vertical stack of full-bleed 4:5 editorial photos */}
-      <div className="flex flex-col w-full divide-y divide-[#FAF9F6]">
+      <div className="flex flex-col w-full divide-y divide-[#E5E5E5]">
         {validImages.map((image, index) => (
           <button
             key={image.id || index}
@@ -95,7 +95,7 @@ const ImageGallery = ({
               setIsZoomed(false)
               setLightboxIndex(index)
             }}
-            className="group relative aspect-[4/5] w-full overflow-hidden bg-[#F2EFE9] cursor-zoom-in text-left focus:outline-none block"
+            className="group relative aspect-[4/5] w-full overflow-hidden bg-[#F7F7F5] cursor-zoom-in text-left focus:outline-none block"
             aria-label={`Zoom ${productTitle} editorial view ${index + 1}`}
           >
             <Image
@@ -105,12 +105,12 @@ const ImageGallery = ({
               alt={`${productTitle} — Editorial View ${index + 1}`}
               fill
               sizes="(max-width: 1024px) 100vw, 60vw"
-              className="object-cover object-center transition-transform duration-700 ease-luxury group-hover:scale-[1.02]"
+              className="object-cover object-top transition-transform duration-700 ease-luxury group-hover:scale-[1.015]"
             />
 
             {/* Discreet architectural hover badge */}
-            <span className="pointer-events-none absolute bottom-5 right-5 px-3 py-1.5 bg-[#0A0A0A]/75 backdrop-blur-md text-[#FAF9F6] text-[10px] uppercase tracking-[0.22em] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Click to Zoom +
+            <span className="pointer-events-none absolute bottom-4 right-4 px-3 py-1.5 bg-[#0A0A0A] text-white text-[10px] uppercase tracking-[0.18em] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              Zoom +
             </span>
           </button>
         ))}

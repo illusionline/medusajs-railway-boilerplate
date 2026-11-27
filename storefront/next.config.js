@@ -48,6 +48,30 @@ const nextConfig = {
         protocol: "http",
         hostname: "**.up.railway.app",
       },
+      {
+        protocol: "https",
+        hostname: "**.railway.app",
+      },
+      {
+        protocol: "https",
+        hostname: "**.storage.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "**.r2.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "**.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.illusionline.com",
+      },
       ...(S3_HOSTNAME && S3_PATHNAME
         ? [
             {

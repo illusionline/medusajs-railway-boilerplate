@@ -1,135 +1,194 @@
-import { listCollections } from "@lib/data/collections"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 export default async function Footer() {
-  const collections = await listCollections({
-    fields: "id, handle, title",
-  })
-    .then((res) => res.collections)
-    .catch(() => [])
-
   return (
-    <footer className="bg-[#0A0A0A] text-[#FAF9F6] border-t border-[#1A1A1A] w-full">
-      <div className="content-container flex flex-col w-full">
-        <div className="grid grid-cols-1 small:grid-cols-[1.4fr_2fr] gap-y-14 gap-x-16 py-20 small:py-28">
-          {/* Brand Column */}
-          <div className="flex flex-col gap-y-5 max-w-sm">
+    <footer className="bg-[#0A0A0A] text-white border-t border-[#0A0A0A] w-full">
+      {/* Top Dispatch & Atelier Notice Strip */}
+      <div className="border-b border-[#222222]">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-[0.16em] text-white/75">
+          <span>COMPLIMENTARY UAE COURIER DELIVERY</span>
+          <span className="hidden sm:inline text-white/30">|</span>
+          <span>WORLDWIDE DHL EXPRESS SHIPPING (AED 99)</span>
+          <span className="hidden sm:inline text-white/30">|</span>
+          <span>READY-TO-WEAR &amp; MADE-TO-MEASURE ATELIER</span>
+        </div>
+      </div>
+
+      {/* Main Footer Columns */}
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-16 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+          {/* Brand & Direct Concierge */}
+          <div className="md:col-span-5 flex flex-col gap-y-4 max-w-sm">
             <LocalizedClientLink
               href="/"
-              className="text-base small:text-lg uppercase tracking-[0.36em] text-[#FAF9F6] hover:opacity-80 transition-opacity w-fit"
+              className="text-base md:text-lg font-semibold uppercase tracking-[0.22em] text-white hover:opacity-75 transition-opacity w-fit"
             >
               ILLUSIONLINE
             </LocalizedClientLink>
-            <p className="text-xs leading-relaxed text-[#FAF9F6]/60 font-light">
+            <p className="text-xs leading-relaxed text-white/65">
               Architectural eveningwear conceived in sculptural silhouettes.
-              Crafted in limited ready-to-wear editions and bespoke
-              made-to-measure tailoring.
+              Crafted in our Dubai atelier in standard sizing and individual
+              made-to-measure commissions.
             </p>
+            <div className="pt-2 flex flex-col gap-y-1">
+              <span className="text-[10px] uppercase tracking-[0.16em] text-white/45">
+                Client Concierge &amp; Support
+              </span>
+              <a
+                href="mailto:support@illusionline.com"
+                className="text-xs tracking-[0.06em] text-white underline underline-offset-4 hover:opacity-75 transition-opacity w-fit"
+              >
+                support@illusionline.com
+              </a>
+            </div>
           </div>
 
-          {/* Navigation Columns */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 small:gap-x-12">
-            {/* Atelier */}
-            <div className="flex flex-col gap-y-4">
-              <span className="text-[10px] uppercase tracking-[0.26em] text-[#FAF9F6]/45">
-                Atelier
-              </span>
-              <ul className="flex flex-col gap-y-2.5 text-xs text-[#FAF9F6]/80">
-                <li>
-                  <LocalizedClientLink
-                    href="/store"
-                    className="hover:text-[#FAF9F6] transition-colors"
-                  >
-                    Shop All
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    href="/store?sortBy=created_at"
-                    className="hover:text-[#FAF9F6] transition-colors"
-                  >
-                    New Arrivals
-                  </LocalizedClientLink>
-                </li>
-                {collections?.slice(0, 4).map((c) => (
-                  <li key={c.id}>
-                    <LocalizedClientLink
-                      href={`/collections/${c.handle}`}
-                      className="hover:text-[#FAF9F6] transition-colors"
-                    >
-                      {c.title}
-                    </LocalizedClientLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Shop / Edit */}
+          <div className="md:col-span-2 flex flex-col gap-y-3.5">
+            <span className="text-[10px] uppercase tracking-[0.18em] font-medium text-white/45">
+              Collection
+            </span>
+            <ul className="flex flex-col gap-y-2.5 text-[11px] uppercase tracking-[0.1em] text-white/80">
+              <li>
+                <LocalizedClientLink
+                  href="/store?sortBy=created_at&filter=new-arrivals"
+                  className="hover:text-white transition-colors"
+                >
+                  New Arrivals
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/store?filter=evening-gowns"
+                  className="hover:text-white transition-colors"
+                >
+                  Evening Gowns
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/store?filter=noir-edit"
+                  className="hover:text-white transition-colors"
+                >
+                  Noir Edit
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/store?filter=made-to-measure"
+                  className="hover:text-white transition-colors"
+                >
+                  Made-to-Measure
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/store"
+                  className="hover:text-white transition-colors"
+                >
+                  All Dresses
+                </LocalizedClientLink>
+              </li>
+            </ul>
+          </div>
 
-            {/* Client Care */}
-            <div className="flex flex-col gap-y-4">
-              <span className="text-[10px] uppercase tracking-[0.26em] text-[#FAF9F6]/45">
-                Client Care
-              </span>
-              <ul className="flex flex-col gap-y-2.5 text-xs text-[#FAF9F6]/80">
-                <li>
-                  <LocalizedClientLink
-                    href="/client-care#shipping"
-                    className="hover:text-[#FAF9F6] transition-colors"
-                  >
-                    Worldwide DHL Express Shipping
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    href="/client-care#made-to-measure"
-                    className="hover:text-[#FAF9F6] transition-colors"
-                  >
-                    Made-to-Measure Guide
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    href="/client-care#concierge"
-                    className="hover:text-[#FAF9F6] transition-colors"
-                  >
-                    Client Concierge
-                  </LocalizedClientLink>
-                </li>
-              </ul>
-            </div>
+          {/* Client Care */}
+          <div className="md:col-span-2 flex flex-col gap-y-3.5">
+            <span className="text-[10px] uppercase tracking-[0.18em] font-medium text-white/45">
+              Client Care
+            </span>
+            <ul className="flex flex-col gap-y-2.5 text-[11px] uppercase tracking-[0.1em] text-white/80">
+              <li>
+                <LocalizedClientLink
+                  href="/client-care#made-to-measure"
+                  className="hover:text-white transition-colors"
+                >
+                  Measurement Guide
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/client-care#shipping"
+                  className="hover:text-white transition-colors"
+                >
+                  DHL Express Delivery
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/client-care#concierge"
+                  className="hover:text-white transition-colors"
+                >
+                  Client Concierge
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/account"
+                  className="hover:text-white transition-colors"
+                >
+                  Account
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/cart"
+                  className="hover:text-white transition-colors"
+                >
+                  Shopping Bag
+                </LocalizedClientLink>
+              </li>
+            </ul>
+          </div>
 
-            {/* Private Account */}
-            <div className="flex flex-col gap-y-4">
-              <span className="text-[10px] uppercase tracking-[0.26em] text-[#FAF9F6]/45">
-                Client Portal
-              </span>
-              <ul className="flex flex-col gap-y-2.5 text-xs text-[#FAF9F6]/80">
-                <li>
-                  <LocalizedClientLink
-                    href="/account"
-                    className="hover:text-[#FAF9F6] transition-colors"
-                  >
-                    Account
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    href="/cart"
-                    className="hover:text-[#FAF9F6] transition-colors"
-                  >
-                    Shopping Bag
-                  </LocalizedClientLink>
-                </li>
-              </ul>
-            </div>
+          {/* Legal & Policies */}
+          <div className="md:col-span-3 flex flex-col gap-y-3.5">
+            <span className="text-[10px] uppercase tracking-[0.18em] font-medium text-white/45">
+              Policies &amp; Legal
+            </span>
+            <ul className="flex flex-col gap-y-2.5 text-[11px] uppercase tracking-[0.1em] text-white/80">
+              <li>
+                <LocalizedClientLink
+                  href="/policies/refund-policy"
+                  className="hover:text-white transition-colors"
+                >
+                  Refund &amp; Returns Policy
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/policies/shipping-policy"
+                  className="hover:text-white transition-colors"
+                >
+                  Shipping &amp; Customs Policy
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/policies/terms-of-service"
+                  className="hover:text-white transition-colors"
+                >
+                  Terms of Service
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/policies/privacy-policy"
+                  className="hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </LocalizedClientLink>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Hairline Bar */}
-        <div className="border-t border-[#1A1A1A] py-8 flex flex-col xsmall:flex-row items-start xsmall:items-center justify-between gap-4 text-[11px] tracking-[0.14em] uppercase text-[#FAF9F6]/45">
+        {/* Bottom Monochrome Bar */}
+        <div className="mt-14 pt-6 border-t border-[#222222] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[10px] tracking-[0.14em] uppercase text-white/45">
           <span>
-            © {new Date().getFullYear()} ILLUSIONLINE. All rights reserved.
+            © {new Date().getFullYear()} ILLUSIONLINE. ALL RIGHTS RESERVED.
           </span>
-          <span>Ready-to-Wear &amp; Bespoke Eveningwear</span>
+          <span>ALL TRANSACTIONS SETTLED IN AED · DUBAI, UAE</span>
         </div>
       </div>
     </footer>

@@ -1,23 +1,25 @@
 import { DisplayCurrencyProvider } from "@lib/context/display-currency-context"
 import { getBaseURL } from "@lib/util/env"
 import { getDisplayCurrencySnapshot } from "@lib/util/fx-display"
+import EditorialFontController from "@modules/common/components/editorial-font-controller"
 import SmoothScrollProvider from "@modules/common/components/smooth-scroll-provider"
 import { Metadata } from "next"
-import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google"
+import { Cormorant_Garamond, Inter } from "next/font/google"
+import { Suspense } from "react"
 import "styles/globals.css"
 
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
-  display: "swap",
-})
-
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-sans",
+  display: "swap",
+})
+
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
   display: "swap",
 })
 
@@ -48,15 +50,20 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html
       lang="en"
       data-mode="light"
-      className={`${cormorantGaramond.variable} ${plusJakartaSans.variable}`}
+      className={`${inter.variable} ${cormorantGaramond.variable}`}
     >
-      <body className="bg-[#FAF9F6] text-[#0A0A0A] font-sans antialiased">
+      <body className="bg-white text-[#0A0A0A] font-sans antialiased">
+        <Suspense fallback={null}>
+          <EditorialFontController />
+        </Suspense>
         <DisplayCurrencyProvider
           initialCurrency={displayCurrency}
           rates={rates}
         >
           <SmoothScrollProvider>
-            <main className="relative min-h-screen">{props.children}</main>
+            <main className="relative min-h-screen bg-white">
+              {props.children}
+            </main>
           </SmoothScrollProvider>
         </DisplayCurrencyProvider>
       </body>

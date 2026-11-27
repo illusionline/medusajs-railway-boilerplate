@@ -89,7 +89,7 @@ const CartDropdown = ({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="h-full flex items-center text-[11px] uppercase tracking-[0.22em] text-[#0A0A0A]/80 hover:text-[#0A0A0A] transition-colors duration-200 focus:outline-none"
+        className="h-full flex items-center text-[11px] uppercase tracking-[0.12em] text-[#0A0A0A] hover:opacity-60 transition-opacity duration-200 focus:outline-none"
         data-testid="nav-cart-link"
         aria-label={`Open shopping bag with ${totalItems} items`}
       >
@@ -109,8 +109,8 @@ const CartDropdown = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="fixed inset-0 bg-[#0A0A0A]/55 backdrop-blur-[2px]"
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="fixed inset-0 bg-black/55"
                   onClick={() => setIsOpen(false)}
                 />
 
@@ -123,15 +123,15 @@ const CartDropdown = ({
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{
-                    duration: 0.48,
+                    duration: 0.42,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  className="relative z-10 w-full max-w-[440px] h-full bg-[#FAF9F6] text-[#0A0A0A] border-l border-[#1A1A1A]/15 flex flex-col justify-between shadow-2xl"
+                  className="relative z-10 w-full max-w-[440px] h-full bg-white text-[#0A0A0A] border-l border-[#E5E5E5] flex flex-col justify-between shadow-2xl"
                 >
                   {/* Drawer Header */}
-                  <div className="px-6 py-5 border-b border-[#0A0A0A]/10 flex items-center justify-between">
-                    <div className="flex items-baseline gap-x-2.5">
-                      <h2 className="text-xs uppercase tracking-[0.26em] font-medium text-[#0A0A0A]">
+                  <div className="px-6 py-5 border-b border-[#E5E5E5] flex items-center justify-between">
+                    <div className="flex items-baseline gap-x-2">
+                      <h2 className="text-[11px] uppercase tracking-[0.18em] font-semibold text-[#0A0A0A]">
                         Shopping Bag
                       </h2>
                       <span className="text-[11px] text-[#0A0A0A]/50">
@@ -141,7 +141,7 @@ const CartDropdown = ({
                     <button
                       type="button"
                       onClick={() => setIsOpen(false)}
-                      className="text-[11px] uppercase tracking-[0.2em] text-[#0A0A0A]/60 hover:text-[#0A0A0A] py-1 px-2 transition-colors"
+                      className="text-[11px] uppercase tracking-[0.16em] text-[#0A0A0A]/60 hover:text-[#0A0A0A] py-1 px-2 transition-colors"
                       aria-label="Close bag drawer"
                     >
                       Close
@@ -239,17 +239,17 @@ const CartDropdown = ({
                       </div>
 
                       {/* Drawer Footer: Dual Display Currency + Exact AED Settlement */}
-                      <div className="p-6 border-t border-[#0A0A0A]/10 bg-[#FAF9F6] space-y-4">
+                      <div className="p-6 border-t border-[#E5E5E5] bg-white space-y-4">
                         <div className="space-y-1.5">
                           <div className="flex items-baseline justify-between">
-                            <span className="text-xs uppercase tracking-[0.2em] text-[#0A0A0A]/70">
+                            <span className="text-[11px] uppercase tracking-[0.16em] text-[#0A0A0A]/70">
                               Subtotal{" "}
                               <span className="normal-case tracking-normal text-[#0A0A0A]/45">
                                 (excl. duties)
                               </span>
                             </span>
                             <span
-                              className="font-display text-2xl text-[#0A0A0A]"
+                              className="font-editorial text-lg font-medium text-[#0A0A0A]"
                               data-testid="cart-subtotal"
                               data-value={subtotal}
                             >
@@ -258,8 +258,8 @@ const CartDropdown = ({
                           </div>
 
                           {displayCurrency !== "AED" && (
-                            <div className="flex items-center justify-between text-[11px] text-[#0A0A0A]/65 border-t border-[#0A0A0A]/10 pt-2">
-                              <span className="uppercase tracking-[0.16em]">
+                            <div className="flex items-center justify-between text-[11px] text-[#0A0A0A]/65 border-t border-[#E5E5E5] pt-2">
+                              <span className="uppercase tracking-[0.14em]">
                                 Exact AED Settlement
                               </span>
                               <span className="font-medium text-[#0A0A0A]">
@@ -272,7 +272,7 @@ const CartDropdown = ({
                         <p className="text-[11px] text-[#0A0A0A]/55 leading-relaxed">
                           {displayCurrency !== "AED"
                             ? `Displayed ${displayCurrency} values are approximate. Orders settle strictly in AED.`
-                            : "Worldwide DHL Express shipping calculated at checkout."}
+                            : "Complimentary UAE Courier · Worldwide DHL Express (AED 99)."}
                         </p>
 
                         <div className="grid grid-cols-1 gap-2.5 pt-1">
@@ -283,7 +283,7 @@ const CartDropdown = ({
                           >
                             <button
                               type="button"
-                              className="w-full h-12 bg-[#0A0A0A] text-[#FAF9F6] text-xs uppercase tracking-[0.24em] font-medium hover:bg-[#1A1A1A] transition-colors duration-300"
+                              className="w-full h-12 bg-[#0A0A0A] text-white text-[11px] uppercase tracking-[0.18em] font-medium hover:bg-black/85 transition-colors duration-200"
                             >
                               Proceed to Checkout
                             </button>
@@ -296,7 +296,7 @@ const CartDropdown = ({
                           >
                             <button
                               type="button"
-                              className="w-full h-10 border border-[#0A0A0A]/20 text-[#0A0A0A] text-[11px] uppercase tracking-[0.22em] hover:border-[#0A0A0A] transition-colors duration-300"
+                              className="w-full h-10 border border-[#E5E5E5] text-[#0A0A0A] text-[11px] uppercase tracking-[0.16em] hover:border-[#0A0A0A] transition-colors duration-200"
                               data-testid="go-to-cart-button"
                             >
                               View Full Bag
@@ -307,10 +307,10 @@ const CartDropdown = ({
                     </>
                   ) : (
                     <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
-                      <span className="text-[10px] uppercase tracking-[0.28em] text-[#0A0A0A]/45 mb-3">
+                      <span className="text-[10px] uppercase tracking-[0.22em] text-[#0A0A0A]/45 mb-3">
                         ILLUSIONLINE
                       </span>
-                      <p className="font-display text-2xl font-light text-[#0A0A0A] mb-2">
+                      <p className="font-editorial text-lg uppercase tracking-[0.08em] font-medium text-[#0A0A0A] mb-2">
                         Your Shopping Bag is Empty
                       </p>
                       <p className="text-xs text-[#0A0A0A]/60 leading-relaxed max-w-[260px] mb-8">
@@ -320,9 +320,9 @@ const CartDropdown = ({
                       <LocalizedClientLink
                         href="/store"
                         onClick={() => setIsOpen(false)}
-                        className="px-8 py-3.5 bg-[#0A0A0A] text-[#FAF9F6] text-[11px] uppercase tracking-[0.24em] hover:bg-[#1A1A1A] transition-colors duration-300"
+                        className="px-8 py-3.5 bg-[#0A0A0A] text-white text-[11px] uppercase tracking-[0.18em] font-medium hover:bg-black/85 transition-colors duration-200"
                       >
-                        Shop Collection
+                        Shop All Dresses
                       </LocalizedClientLink>
                     </div>
                   )}

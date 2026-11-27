@@ -22,14 +22,14 @@ export default function PreviewPrice({ price }: { price: VariantPrice }) {
     <>
       {price.price_type === "sale" && (
         <span
-          className="line-through text-[#0A0A0A]/40 text-xs"
+          className="line-through text-[#0A0A0A]/40 text-[11px]"
           data-testid="original-price"
         >
           {originalDisplay}
         </span>
       )}
       <span
-        className={clx("text-xs tracking-[0.06em] text-[#0A0A0A]/85", {
+        className={clx("text-[11px] tracking-[0.04em] text-[#0A0A0A]/80", {
           "font-medium text-[#0A0A0A]": price.price_type === "sale",
         })}
         data-testid="price"

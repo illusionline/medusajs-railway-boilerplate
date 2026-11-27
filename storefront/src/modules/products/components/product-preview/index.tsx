@@ -16,12 +16,6 @@ export default function ProductPreview({
     product,
   })
 
-  const hasCustomVariant = product.variants?.some(
-    (v) =>
-      v.title?.toLowerCase().includes("custom") ||
-      v.options?.some((o) => o.value?.toLowerCase().includes("custom"))
-  )
-
   return (
     <LocalizedClientLink
       href={`/products/${product.handle}`}
@@ -33,24 +27,18 @@ export default function ProductPreview({
           images={product.images}
           size="full"
           isFeatured={isFeatured}
+          alt={product.title || "ILLUSIONLINE Gown"}
         />
-        <div className="mt-4 flex flex-col gap-y-1">
-          <div className="flex items-baseline justify-between gap-x-4">
-            <h3
-              className="font-display text-lg small:text-xl font-normal tracking-wide text-[#0A0A0A] group-hover:opacity-70 transition-opacity"
-              data-testid="product-title"
-            >
-              {product.title}
-            </h3>
-            <div className="flex items-center gap-x-2 shrink-0 text-xs tracking-[0.06em] text-[#0A0A0A]/80">
-              {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
-            </div>
+        <div className="pt-3 flex flex-col gap-y-1">
+          <h3
+            className="font-sans text-[11px] font-medium uppercase tracking-[0.08em] leading-snug text-[#0A0A0A] group-hover:underline underline-offset-4 line-clamp-2"
+            data-testid="product-title"
+          >
+            {product.title}
+          </h3>
+          <div className="flex items-center gap-x-2 text-[11px] tracking-[0.04em] text-[#0A0A0A]/75">
+            {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
           </div>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#0A0A0A]/45">
-            {hasCustomVariant
-              ? "Ready-to-Wear · Bespoke"
-              : "Architectural Eveningwear"}
-          </span>
         </div>
       </article>
     </LocalizedClientLink>

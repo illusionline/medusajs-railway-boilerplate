@@ -7,11 +7,11 @@ import { AnimatePresence, motion } from "framer-motion"
 import React, { useEffect, useRef, useState } from "react"
 
 type CurrencySwitcherProps = {
-  variant?: "header" | "drawer"
+  variant?: "topbar" | "header" | "drawer"
 }
 
 const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
-  variant = "header",
+  variant = "topbar",
 }) => {
   const {
     displayCurrency,
@@ -53,12 +53,15 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
 
   if (variant === "drawer") {
     return (
-      <div className="flex flex-col gap-y-2.5" data-testid="drawer-currency-switcher">
+      <div
+        className="flex flex-col gap-y-2.5"
+        data-testid="drawer-currency-switcher"
+      >
         <div className="flex items-center justify-between">
-          <span className="text-[10px] uppercase tracking-[0.24em] text-[#FAF9F6]/50">
+          <span className="text-[10px] uppercase tracking-[0.18em] text-white/60">
             Display Currency
           </span>
-          <span className="text-[10px] tracking-[0.14em] uppercase text-[#FAF9F6]/45">
+          <span className="text-[10px] tracking-[0.14em] uppercase text-white/45">
             Settled in AED
           </span>
         </div>
@@ -72,10 +75,10 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
                 onClick={() => handleSelect(code)}
                 title={currencyMeta[code]?.label || code}
                 className={clx(
-                  "h-8 text-[10px] uppercase tracking-[0.14em] border transition-colors",
+                  "h-8 text-[10px] uppercase tracking-[0.12em] border transition-colors",
                   active
-                    ? "bg-[#FAF9F6] text-[#0A0A0A] border-[#FAF9F6] font-medium"
-                    : "bg-transparent text-[#FAF9F6]/70 border-[#FAF9F6]/20 hover:border-[#FAF9F6]/60 hover:text-[#FAF9F6]"
+                    ? "bg-white text-[#0A0A0A] border-white font-semibold"
+                    : "bg-transparent text-white/75 border-white/20 hover:border-white hover:text-white"
                 )}
               >
                 {code}
@@ -88,6 +91,7 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
   }
 
   const activeMeta = currencyMeta[displayCurrency]
+  const isTopbar = variant === "topbar"
 
   return (
     <div
@@ -100,15 +104,22 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        title={`Display currency: ${activeMeta?.label || displayCurrency} (Settled in AED)`}
-        className="flex items-center gap-x-1.5 text-[11px] uppercase tracking-[0.2em] text-[#0A0A0A]/75 hover:text-[#0A0A0A] transition-colors py-1 focus:outline-none"
+        title={`Display currency: ${
+          activeMeta?.label || displayCurrency
+        } (Settled in AED)`}
+        className={clx(
+          "flex items-center gap-x-1.5 uppercase transition-colors py-1 focus:outline-none",
+          isTopbar
+            ? "text-[10px] tracking-[0.16em] text-white hover:text-white/75"
+            : "text-[11px] tracking-[0.12em] text-[#0A0A0A] hover:opacity-65"
+        )}
       >
         <span>
-          {displayCurrency === "IRT" ? "IRT · Toman" : displayCurrency}
+          {displayCurrency === "IRT" ? "IRT · TOMAN" : displayCurrency}
         </span>
         <span
           className={clx(
-            "text-[9px] leading-none transition-transform duration-200",
+            "text-[9px] leading-none transition-transform duration-150",
             open && "rotate-180"
           )}
         >
@@ -119,20 +130,20 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, y: 2 }}
+            transition={{ duration: 0.15 }}
             role="listbox"
             aria-label="Select display currency"
             data-lenis-prevent
-            className="absolute right-0 top-[calc(100%+1px)] z-[90] w-64 bg-[#FAF9F6] text-[#0A0A0A] border border-[#1A1A1A]/20 shadow-xl py-2"
+            className="absolute right-0 top-[calc(100%+4px)] z-[110] w-64 bg-white text-[#0A0A0A] border border-[#0A0A0A] shadow-xl py-1.5"
           >
-            <div className="px-4 py-2 border-b border-[#0A0A0A]/10 flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-[0.22em] text-[#0A0A0A]/50">
+            <div className="px-4 py-2 border-b border-[#E5E5E5] flex items-center justify-between">
+              <span className="text-[10px] uppercase tracking-[0.16em] text-[#0A0A0A]/60 font-medium">
                 Display Currency
               </span>
-              <span className="text-[9px] uppercase tracking-[0.16em] text-[#0A0A0A]/45">
+              <span className="text-[9px] uppercase tracking-[0.14em] text-[#0A0A0A]/45">
                 AED Base
               </span>
             </div>
@@ -152,18 +163,18 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
                     className={clx(
                       "w-full px-4 py-2 text-left flex items-center justify-between text-xs transition-colors",
                       isSelected
-                        ? "bg-[#0A0A0A] text-[#FAF9F6]"
-                        : "text-[#0A0A0A]/80 hover:bg-[#F2EFE9]"
+                        ? "bg-[#0A0A0A] text-white"
+                        : "text-[#0A0A0A] hover:bg-[#F7F7F5]"
                     )}
                   >
                     <span className="flex items-center gap-x-2.5">
-                      <span className="font-medium tracking-[0.14em] uppercase w-9">
+                      <span className="font-medium tracking-[0.12em] uppercase w-9 text-[11px]">
                         {code}
                       </span>
                       <span
                         className={clx(
                           "text-[11px]",
-                          isSelected ? "text-[#FAF9F6]/75" : "text-[#0A0A0A]/55"
+                          isSelected ? "text-white/75" : "text-[#0A0A0A]/60"
                         )}
                       >
                         {meta?.label}
@@ -173,7 +184,7 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
                       <span
                         className={clx(
                           "text-[9px] uppercase tracking-[0.14em]",
-                          isSelected ? "text-[#FAF9F6]/70" : "text-[#0A0A0A]/45"
+                          isSelected ? "text-white/70" : "text-[#0A0A0A]/45"
                         )}
                       >
                         Exact
@@ -184,9 +195,11 @@ const CurrencySwitcher: React.FC<CurrencySwitcherProps> = ({
               })}
             </div>
 
-            <div className="px-4 pt-2 pb-1 border-t border-[#0A0A0A]/10">
-              <p className="text-[10px] leading-snug text-[#0A0A0A]/55">
-                All orders settle in <strong className="font-medium text-[#0A0A0A]">AED</strong> at checkout.
+            <div className="px-4 pt-2 pb-1.5 border-t border-[#E5E5E5]">
+              <p className="text-[10px] leading-snug text-[#0A0A0A]/60">
+                All orders settle in{" "}
+                <strong className="font-semibold text-[#0A0A0A]">AED</strong> at
+                checkout.
               </p>
             </div>
           </motion.div>

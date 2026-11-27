@@ -10,13 +10,13 @@ export const metadata: Metadata = {
 
 export default function ClientCarePage() {
   return (
-    <div className="bg-[#FAF9F6] text-[#0A0A0A] py-16 small:py-28">
+    <div className="bg-white text-[#0A0A0A] py-16 small:py-24">
       <div className="content-container max-w-4xl">
         <EditorialReveal>
-          <span className="block text-[11px] uppercase tracking-[0.3em] text-[#0A0A0A]/50 mb-4">
+          <span className="block text-[11px] uppercase tracking-[0.2em] text-[#0A0A0A]/50 mb-3">
             ILLUSIONLINE ATELIER
           </span>
-          <h1 className="font-display text-4xl small:text-6xl font-light tracking-wide text-[#0A0A0A] mb-6">
+          <h1 className="font-editorial text-3xl small:text-5xl font-medium uppercase tracking-[0.06em] text-[#0A0A0A] mb-6">
             Client Care &amp; Bespoke Guide
           </h1>
           <p className="text-sm small:text-base text-[#0A0A0A]/70 leading-relaxed max-w-2xl">
@@ -174,10 +174,10 @@ export default function ClientCarePage() {
                         Atelier Direct Desk
                       </span>
                       <a
-                        href="mailto:concierge@illusionline.com"
-                        className="font-display text-xl tracking-wide text-[#FAF9F6] hover:opacity-80 transition-opacity"
+                        href="mailto:support@illusionline.com"
+                        className="font-editorial text-base uppercase tracking-[0.08em] text-white hover:opacity-80 transition-opacity"
                       >
-                        concierge@illusionline.com
+                        support@illusionline.com
                       </a>
                     </div>
                     <LocalizedClientLink
